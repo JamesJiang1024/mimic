@@ -1,0 +1,30 @@
+[composite:monster]
+use = egg:Paste#urlmap
+/: monsterversions
+/v1.0: monsterapi_v1_0
+
+[composite:monsterapi_v1_0]
+use = call:monster.api.auth:pipeline_factory
+noauth = faultwrap monsterapi_app_v1_0
+keystone = faultwrap authtoken keystonecontext monsterapi_app_v1_0
+
+[filter:authtoken]
+paste.filter_factory = keystone.middleware.auth_token:filter_factory
+auth_host = 127.0.0.1
+auth_port = 35357
+auth_protocol = http
+admin_tenant_name = service
+admin_user = monster
+admin_password = admin
+
+[filter:keystonecontext]
+paste.filter_factory = monster.api.auth:KeystoneContext.factory
+
+[filter:faultwrap]
+paste.filter_factory = monster.api.faultwrap:FaultWrapper.factory
+
+[app:monsterversions]
+paste.app_factory = monster.api.versions:Versions.factory
+
+[app:monsterapi_app_v1_0]
+paste.app_factory = monster.api.router:APIRouter.factory

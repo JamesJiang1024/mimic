@@ -1,0 +1,12 @@
+[DEFAULT]
+debug = False
+verbose = True
+
+## config faucet api
+api_paste_config = api-paste.ini
+auth_strategy = noauth
+api_listen = 0.0.0.0
+api_listen_port = 5556
+
+## config logging
+logdir = /var/log/faucet

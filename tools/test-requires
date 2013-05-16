@@ -1,0 +1,10 @@
+distribute>=0.6.24
+coverage
+discover
+mock>=1.0
+nose
+nosehtmloutput
+nosexcover
+pep8==1.3.3
+webtest==1.3.3
+unittest2
