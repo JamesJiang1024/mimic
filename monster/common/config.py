@@ -49,6 +49,9 @@ core_opts = [
     cfg.StrOpt('memcache_address',
         default="127.0.0.1:11211",
                help='memcache_address'),
+    cfg.StrOpt('foreman_address',
+        default="127.0.0.1:3000",
+               help='memcache_address'),
 ]
 
 cfg.CONF.register_opts(core_opts)

@@ -51,5 +51,5 @@ class APIRouter(wsgi.Router):
                         controller=self.resources['node'])
 
         self.resources['discoveried_server'] = discoveried_server.create_resource()
-        mapper.resource('discoveried_server', 'discoveried_server',
+        mapper.resource('discoveried_server', 'discoveried_servers',
                         controller=self.resources['discoveried_server'])
