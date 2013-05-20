@@ -1,4 +1,5 @@
 from monster.openstack.common import wsgi
+from monster.openstack.common import log as logging
 
 
 LOG = logging.getLogger(__name__)
@@ -6,21 +7,20 @@ LOG = logging.getLogger(__name__)
 
 class Partition(object):
 
-    def __init__(self, devices, raidcard=False):
-        if dicts['raid_card'] == 'no' and dicts['disks'].__len__() > 1:
+    def __init__(self, devices, raidcard="no"):
+        if raidcard=="no" and len(devices) > 1:
             self.doraid = True
         else:
             self.doraid = False
 
         self.parts = ""
         self.devices = devices
-        self.raidcard = raidcard
-        self.devices_number = devices.__len__()
+        self.devices_number = len(devices)
         self._do_rules()
 
     def _raid_partition(self, bootdevice, pvdevice):
-        if devices_number % 2 == 0:
-            if devices_number / 2 > 1:
+        if self.devices_number % 2 == 0:
+            if self.devices_number / 2 > 1:
                 level = 10
             else:
                 level = 1
@@ -47,9 +47,10 @@ class Partition(object):
         self.parts+="logvol /data0 --fstype ext4 --name=LogVol03 --vgname=VolGroup00 --size=512 --grow --maxsize=51200 \n\r"
         self.parts+="logvol /data1 --fstype ext4 --name=LogVol04 --vgname=VolGroup00 --size=512 --grow --maxsize=51200 \n\r"
 
-    def _do_raid():
+    def _do_raid(self):
         bootdevice = []
         pvdevice = []
+        count=0
         for device in self.devices:
             count += 1
             raid_num=str(count)
@@ -62,4 +63,3 @@ class Partition(object):
             pvdevice.append("raid.1%s" % raid_num)
 
         return (bootdevice, pvdevice)
-

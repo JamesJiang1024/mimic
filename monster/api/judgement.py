@@ -3,23 +3,34 @@ import urllib
 import httplib2
 
 from monster.openstack.common import cfg
+from monster.api import foreman_helper
 
 
 rule_begin = cfg.CONF.rule_begin
 rule_increase = cfg.CONF.rule_increase
 
 
-def judge_roles():
-    hosts_nu = hosts_num()
-    pass
+def judge_hostgroup():
+    hosts_nu = len(foreman_helper.hosts())
+    hosts_nu += 1
+    (upper, sequence) = _upper_bound(hosts_nu)
+    while len(sequence) != 0:
+        node = sequence.pop(0)
+        if upper[node] == "max":
+            return foreman_helper.host_groups()[node]
+        if hosts_nu - upper[node] > 0:
+            hosts_nu -= upper[node]
+        else:
+            return foreman_helper.host_groups()[node]
 
 
-def get_upper(num):
+def _upper_bound(num):
     upper = {}
-    rule_begin = "count=20;master=2;compute=max"
-    rule_increase = "count=10;master=1;compute=max"
+    sequence=[]
+
     rules_b = rule_begin.split(";")
     rules_i = rule_increase.split(";")
+
     count_begin = int(rules_b[0].split("=")[1])
     count_increase = int(rules_i[0].split("=")[1])
 
@@ -27,6 +38,7 @@ def get_upper(num):
     rules_i = rules_i[1:]
 
     for rule in rules_b:
+        sequence.append(rule.split("=")[0])
         if rule.split("=")[1] != "max":
             upper[rule.split("=")[0]] = int(rule.split("=")[1])
         else:
@@ -41,12 +53,4 @@ def get_upper(num):
         for rule in rules_i:
             if upper[rule.split("=")[0]] != "max":
                 upper[rule.split("=")[0]] += n * int(rule.split("=")[1])
-    return upper
-
-
-def hosts_num():
-    return 10
-
-
-if __name__ == "__main__":
-    print get_upper(34)
+    return (upper, sequence)

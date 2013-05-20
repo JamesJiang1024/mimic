@@ -53,14 +53,14 @@ class Controller(controller.Controller):
 
     def index(self, req, **kwargs):
         mc = memcache.Client([cfg.CONF.memcache_address])
-        discoveried_cache = mc.get("discoveried_new")
+        discoveried_cache = mc.get("discoveried_new") or {}
 
         LOG.info("Get Discoveried Server Into Cache: %s" % discoveried_cache)
         for server in discoveried_cache:
             mc.set(str(server), discoveried_cache[str(server)])
 
         mc.set("discoveried_new", {})
-        return discoveried_cache
+        return mc.get("discoveried_new")
 
     def create(self, req, **kwargs):
         discoveried_server = kwargs['body']
