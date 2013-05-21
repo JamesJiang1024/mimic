@@ -31,7 +31,6 @@ class Controller(controller.Controller):
 
     def check_create_input(self, inputs):
         standard = {
-                    'name': True,
                     'cpu': True,
                     'memory': True,
                     'harddisk': True,
@@ -57,10 +56,11 @@ class Controller(controller.Controller):
 
         LOG.info("Get Discoveried Server Into Cache: %s" % discoveried_cache)
         for server in discoveried_cache:
+            discoveried_cache[str(server)]['status'] = "pendding"
             mc.set(str(server), discoveried_cache[str(server)])
-
+        result = mc.get("discoveried_new")
         mc.set("discoveried_new", {})
-        return mc.get("discoveried_new")
+        return result
 
     def create(self, req, **kwargs):
         discoveried_server = kwargs['body']
@@ -70,9 +70,11 @@ class Controller(controller.Controller):
         LOG.info("New Server Being Discoveried: %s" % discoveried_server)
         mc = memcache.Client([cfg.CONF.memcache_address])
         discoveried_cache = mc.get("discoveried_new")
+        name = "HD" + str(len(discoveried_cache))
         if discoveried_cache == None:
             discoveried_cache = {}
 
+        discoveried_server['detail']['name'] = name
         discoveried_cache[discoveried_server['uuid']] = discoveried_server['detail']
         mc.set("discoveried_new", discoveried_cache)
         LOG.info("Now Cached Servers: %s" % discoveried_cache)

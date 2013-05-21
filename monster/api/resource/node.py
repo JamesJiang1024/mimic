@@ -15,6 +15,7 @@
 #    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 #    License for the specific language governing permissions and limitations
 #    under the License.
+import json
 
 from monster.api import controller
 from monster.api import foreman_helper
@@ -30,23 +31,26 @@ LOG = logging.getLogger(__name__)
 class Controller(controller.Controller):
     def create(self, req, **kwargs):
         content=kwargs['body']
-        name=content['name']
         mac=content['mac']
-        devices=content['devices']
-        raidcard=content['raidcard']
-
-        hostgroup_id = judgement.judge_hostgroup()
-        partition = disk_partition.Partition(devices, raidcard)
-
+        local=content['local']
         host_info = {
-                'name': name,
+                'name': "us"+str(len(foreman_helper.hosts())+1),
                 'mac': mac,
-                'hostgroup_id': hostgroup_id,
-                'disk': partition.parts
-                }
+                'build': True
+        }
+        if local == "no":
+            devices=content['devices']
+            raidcard=content['raidcard']
+            hostgroup_id = judgement.judge_hostgroup()
+            partition = disk_partition.Partition(devices, raidcard)
+            host_info['disk'] = partition.parts
+        else:
+            hostgroup_id = foreman_helper.host_groups()['local']
+
+        host_info['hostgroup_id'] = hostgroup_id
 
         LOG.info("Server To Post: %s" % host_info)
-        return foreman_helper.create_host(host_info)
+        return json.loads(foreman_helper.create_host(host_info))
 
 
     def delete(self, req, **kwargs):

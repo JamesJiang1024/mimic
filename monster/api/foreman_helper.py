@@ -43,5 +43,3 @@ def create_host(host_info):
             "POST", body=json.dumps(data), \
             headers={'content-type': 'application/json'})
     return content
-
-
