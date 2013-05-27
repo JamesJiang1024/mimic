@@ -1,0 +1,14 @@
+status: 200
+content-location: http://192.168.1.2:3000/api/operatingsystems
+x-powered-by: Phusion Passenger (mod_rails/mod_rack) 2.2.11
+foreman_version: 1.1-1
+server: Apache/2.2.22 (Ubuntu)
+x-runtime: 0.500637
+etag: "bba085d77326ce4dc28d704f5693ce02"
+x-ua-compatible: IE=Edge,chrome=1
+cache-control: max-age=0, private, must-revalidate
+date: Fri, 17 May 2013 03:47:16 GMT
+content-type: application/json; charset=utf-8
+foreman_api_version: 1
+
+[{"operatingsystem":{"media":[{"medium":{"name":"CentOS mirror","id":1}}],"ptables":[],"major":"6","architectures":[{"architecture":{"name":"x86_64","id":1}}],"family":"Redhat","config_templates":[{"config_template":{"name":"CentOS Kickseed","id":31}}],"release_name":"","name":"CentOS","minor":"4","id":2,"os_default_templates":[]}},{"operatingsystem":{"media":[{"medium":{"name":"CentOS mirror","id":1}}],"ptables":[{"ptable":{"name":"CentOS default","id":11}}],"major":"6","architectures":[{"architecture":{"name":"x86_64","id":1}}],"os_default_templates":[{"os_default_template":{"config_template_id":30,"template_kind_id":1,"id":1}},{"os_default_template":{"config_template_id":32,"template_kind_id":3,"id":2}}],"family":"Redhat","config_templates":[{"config_template":{"name":"CentOS Default","id":30}},{"config_template":{"name":"CentOS Kickseed","id":31}},{"config_template":{"name":"CentOS Simple","id":32}}],"release_name":"","name":"CentOS","minor":"2","id":4}},{"operatingsystem":{"media":[{"medium":{"name":"CentOS mirror","id":1}}],"ptables":[{"ptable":{"name":"CentOS default","id":11}}],"major":"6","architectures":[{"architecture":{"name":"x86_64","id":1}}],"os_default_templates":[{"os_default_template":{"config_template_id":33,"template_kind_id":1,"id":3}}],"family":"Redhat","config_templates":[{"config_template":{"name":"LivePXE","id":33}}],"release_name":"","name":"CentOS-Live","minor":"3","id":5}},{"operatingsystem":{"media":[],"config_templates":[],"ptables":[],"major":"12","architectures":[{"architecture":{"name":"x86_64","id":1}}],"family":"Debian","release_name":"precise","name":"Ubuntu","minor":"04","id":1,"os_default_templates":[]}}]

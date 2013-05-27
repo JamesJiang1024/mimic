@@ -1,0 +1,18 @@
+[composite:mimic]
+use = egg:Paste#urlmap
+/: mimicversions
+/v1.0: mimicapi_v1_0
+
+[composite:mimicapi_v1_0]
+use = call:mimic.api.auth:pipeline_factory
+noauth = faultwrap mimicapi_app_v1_0
+keystone = faultwrap mimicapi_app_v1_0
+
+[filter:faultwrap]
+paste.filter_factory = mimic.api.faultwrap:FaultWrapper.factory
+
+[app:mimicversions]
+paste.app_factory = mimic.api.versions:Versions.factory
+
+[app:mimicapi_app_v1_0]
+paste.app_factory = mimic.api.router:APIRouter.factory

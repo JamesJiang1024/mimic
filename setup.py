@@ -10,11 +10,11 @@ if sys.version_info < (2, 7):
     requirements.append('argparse')
 
 setuptools.setup(
-    name="monster",
+    name="mimic",
     version="0.1",
     description="OpenStack Load Balancer Server",
     long_description="OpenStack Load Balancer Server",
-    url='https://github.com/jiangwt100/monster',
+    url='https://github.com/jiangwt100/mimic',
     license='Apache',
     author='Jim Jiang',
     author_email='jiangwt100@gmail.com',
@@ -30,6 +30,6 @@ setuptools.setup(
     ],
     install_requires=requirements,
     scripts=[
-        'bin/monster-server',
+        'bin/mimic-server',
     ],
 )

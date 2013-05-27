@@ -1,0 +1,15 @@
+status: 200
+content-length: 381
+content-location: http://192.168.3.218:3000/api/hostgroups
+foreman_version: 1.1stable
+x-runtime: 0.051543
+server: WEBrick/1.3.1 (Ruby/1.8.7/2011-06-30)
+connection: Keep-Alive
+etag: "0741199610291a8951f7de3bc8eb04b8"
+x-ua-compatible: IE=Edge,chrome=1
+cache-control: max-age=0, private, must-revalidate
+date: Mon, 20 May 2013 03:07:08 GMT
+content-type: application/json; charset=utf-8
+foreman_api_version: 1
+
+[{"hostgroup":{"environment_id":1,"parameters":{},"ancestry":null,"label":"master","puppetclass_ids":[],"id":1,"domain_id":2,"subnet_id":2,"operatingsystem_id":1,"name":"master"}},{"hostgroup":{"environment_id":1,"parameters":{"id":"compute"},"ancestry":null,"label":"compute","puppetclass_ids":[],"id":2,"domain_id":2,"subnet_id":null,"operatingsystem_id":null,"name":"compute"}}]
