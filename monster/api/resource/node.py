@@ -33,8 +33,9 @@ class Controller(controller.Controller):
         content=kwargs['body']
         mac=content['mac']
         local=content['local']
+        hosts_num = foreman_helper.hosts() or {}
         host_info = {
-                'name': "us"+str(len(foreman_helper.hosts())+1),
+                'name': "us"+str(len(hosts_num)+1),
                 'mac': mac,
                 'build': True
         }

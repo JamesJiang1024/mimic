@@ -69,7 +69,7 @@ class Controller(controller.Controller):
 
         LOG.info("New Server Being Discoveried: %s" % discoveried_server)
         mc = memcache.Client([cfg.CONF.memcache_address])
-        discoveried_cache = mc.get("discoveried_new")
+        discoveried_cache = mc.get("discoveried_new") or {}
         name = "HD" + str(len(discoveried_cache))
         if discoveried_cache == None:
             discoveried_cache = {}
@@ -97,7 +97,7 @@ class Controller(controller.Controller):
         mc = memcache.Client([cfg.CONF.memcache_address])
         server_id = kwargs['id']
         server = mc.get(str(server_id))
-        return server
+        return server['status']
 
 def create_resource():
     return wsgi.Resource(Controller())
