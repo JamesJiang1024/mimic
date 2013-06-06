@@ -21,7 +21,7 @@ import routes
 from mimic.openstack.common import wsgi
 from mimic.openstack.common import log as logging
 
-from mimic.api.resource import discoveried_server
+from mimic.api.resource import discovered_server
 from mimic.api.resource import node
 
 
@@ -50,6 +50,6 @@ class APIRouter(wsgi.Router):
         mapper.resource('node', 'nodes',
                         controller=self.resources['node'])
 
-        self.resources['discoveried_server'] = discoveried_server.create_resource()
-        mapper.resource('discoveried_server', 'discoveried_servers',
-                        controller=self.resources['discoveried_server'])
+        self.resources['discovered_server'] = discovered_server.create_resource()
+        mapper.resource('discovered_server', 'discovered_servers',
+                        controller=self.resources['discovered_server'])

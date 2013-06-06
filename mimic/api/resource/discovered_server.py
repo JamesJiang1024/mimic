@@ -31,16 +31,14 @@ class Controller(controller.Controller):
 
     def check_create_input(self, inputs):
         standard = {
+                    'uuid': True,
                     'cpu': True,
                     'memory': True,
                     'harddisk': True,
-                    'discoveried_mac': True
+                    'discovered_mac': True
                     }
 
-        if inputs['uuid'] == None or inputs['detail'] == None:
-            return False
-
-        for ins in inputs['detail']:
+        for ins in inputs:
             ri = standard.pop(ins)
             if ri == None:
                 return False
@@ -51,53 +49,60 @@ class Controller(controller.Controller):
 
 
     def index(self, req, **kwargs):
+        # info from cache
         mc = memcache.Client([cfg.CONF.memcache_address])
-        discoveried_cache = mc.get("discoveried_new") or {}
+        discovered_cache = mc.get("discovered_new") or []
 
-        LOG.info("Get Discoveried Server Into Cache: %s" % discoveried_cache)
-        for server in discoveried_cache:
-            discoveried_cache[str(server)]['status'] = "pendding"
-            mc.set(str(server), discoveried_cache[str(server)])
-        result = mc.get("discoveried_new")
-        mc.set("discoveried_new", {})
-        return result
+        LOG.info("Get discovered Server Into Cache: %s" % discovered_cache)
+        for server in discovered_cache:
+            server['status'] = "pendding"
+            mc.set(str(server['uuid']), server)
+
+        # reset cache
+        result = mc.get("discovered_new")
+        mc.set("discovered_new", {})
+        return {"data": result}
 
     def create(self, req, **kwargs):
-        discoveried_server = kwargs['body']
-        if not self.check_create_input(discoveried_server):
+        #check if inputs is ok
+        discovered_server = kwargs['body']
+        if not self.check_create_input(discovered_server):
             return False
+        LOG.info("New Server Being discovered: %s" % discovered_server)
 
-        LOG.info("New Server Being Discoveried: %s" % discoveried_server)
+        #discover new machine
+
+        #read data from cache
         mc = memcache.Client([cfg.CONF.memcache_address])
-        discoveried_cache = mc.get("discoveried_new") or {}
-        name = "HD" + str(len(discoveried_cache))
-        if discoveried_cache == None:
-            discoveried_cache = {}
+        discovered_cache = mc.get("discovered_new") or []
 
-        discoveried_server['detail']['name'] = name
-        discoveried_cache[discoveried_server['uuid']] = discoveried_server['detail']
-        mc.set("discoveried_new", discoveried_cache)
-        LOG.info("Now Cached Servers: %s" % discoveried_cache)
-        return discoveried_cache
+        #append server to cache
+        name = "HD" + str(len(discovered_cache))
+        discovered_server['name'] = name
+        discovered_cache.append(discovered_server)
+        mc.set("discovered_new", discovered_cache)
+        LOG.info("Now Cached Servers: %s" % discovered_cache)
+
+        return {"data": discovered_cache}
 
     def update(self, req, **kwargs):
         mc = memcache.Client([cfg.CONF.memcache_address])
 
         server_id = kwargs['id']
         server = mc.get(str(server_id))
-        LOG.info("Update Discoveried Server Status Before: %s" % server)
+        LOG.info("Update discovered Server Status Before: %s" % server)
 
         server['status'] = kwargs['body']['status']
         mc.set(str(server_id), server)
-        LOG.info("Update Discoveried Server Status After: %s" % server)
+        LOG.info("Update discovered Server Status After: %s" % server)
 
-        return server
+        return {"data": server}
 
     def show(self, req, **kwargs):
         mc = memcache.Client([cfg.CONF.memcache_address])
         server_id = kwargs['id']
         server = mc.get(str(server_id))
-        return server['status']
+        return {"data": server}
 
 def create_resource():
     return wsgi.Resource(Controller())
