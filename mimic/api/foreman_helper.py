@@ -4,13 +4,15 @@ import httplib2
 from mimic.openstack.common import cfg
 
 
+LOG = logging.getLogger(__name__)
+
+
 def operating_system():
     boot_from_local = "BootFromLocal"
     unitedstack_os = "UnitedStackOS"
 
     h = httplib2.Http(".cache")
-    resp, content = h.request("%s/api/operatingsystems" % \
-            cfg.CONF.foreman_address, "GET")
+    resp, content = h.request("%s/api/operatingsystems" % cfg.CONF.foreman_address, "GET")
     systems = json.loads(content)
     for system in systems:
         if system['operatingsystem']['name'] == boot_from_local:
@@ -37,9 +39,11 @@ def hosts():
     hosts = json.loads(content)
     return hosts
 
+
 def create_host(host_info):
     h = httplib2.Http(".cache")
     data = {"host": host_info}
+    LOG.info("Create Host Info: %s" % host_info)
     resp, content = h.request("%s/api/hosts" % cfg.CONF.foreman_address, \
             "POST", body=json.dumps(data), \
             headers={'content-type': 'application/json'})

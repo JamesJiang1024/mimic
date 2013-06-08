@@ -31,6 +31,8 @@ class Partition(object):
     def _do_rules(self):
         if self.doraid:
             (bootdevice, pvdevice) = self._do_raid()
+            LOG.info("Boot Device %s" % bootdevice)
+            LOG.info("PV Device %s" % pvdevice)
             self._raid_partition(bootdevice, pvdevice)
         else:
             self._no_raid_partition()
