@@ -4,7 +4,7 @@ set -eu
 
 function usage {
   echo "Usage: $0 [OPTION]..."
-  echo "Run Faucet's test suite(s)"
+  echo "Run mimic's test suite(s)"
   echo ""
   echo "  -V, --virtual-env        Always use virtualenv.  Install automatically if not present"
   echo "  -N, --no-virtual-env     Don't use virtualenv.  Run tests in local environment"
@@ -68,7 +68,7 @@ done
 
 # If enabled, tell nose to collect coverage data
 if [ $coverage -eq 1 ]; then
-    noseopts="$noseopts --with-coverage --cover-package=faucet"
+    noseopts="$noseopts --with-coverage --cover-package=mimic"
 fi
 
 if [ $no_site_packages -eq 1 ]; then
@@ -98,7 +98,7 @@ function run_pep8 {
 
   PEP8_EXCLUDE="*.pyc,.venv,.tox,dist,doc,openstack,*egg"
   PEP8_OPTIONS="--exclude=$PEP8_EXCLUDE --ignore=E125 --repeat --show-source"
-  PEP8_INCLUDE="bin/* faucet setup*.py"
+  PEP8_INCLUDE="bin/* mimic setup*.py"
   ${wrapper} pep8 $PEP8_OPTIONS $PEP8_INCLUDE
 }
 
@@ -145,5 +145,5 @@ run_tests
 if [ $coverage -eq 1 ]; then
     echo "Generating coverage report in covhtml/"
     # Don't compute coverage for common code, which is tested elsewhere
-    ${wrapper} coverage html --include='faucet/*' --omit='faucet/openstack/common/*' -d covhtml -i
+    ${wrapper} coverage html --include='mimic/*' --omit='mimic/openstack/common/*' -d covhtml -i
 fi

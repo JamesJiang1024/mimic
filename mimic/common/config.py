@@ -47,16 +47,16 @@ core_opts = [
                default=9001,
                help='Port for mimic API to listen.'),
     cfg.StrOpt('memcache_address',
-        default="127.0.0.1:11211",
+               default="127.0.0.1:11211",
                help='memcache_address'),
     cfg.StrOpt('foreman_address',
-        default="http://127.0.0.1:3000",
+               default="http://127.0.0.1:3000",
                help='foreman_address'),
     cfg.StrOpt('rule_begin',
-        default="count=20;master=2;compute=max",
+               default="count=20;master=2;compute=max",
                help='rule_begin'),
     cfg.StrOpt('rule_increase',
-        default="count=10;master=1;compute=max",
+               default="count=10;master=1;compute=max",
                help='rule_increase')
 ]
 

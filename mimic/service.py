@@ -17,7 +17,6 @@
 #    under the License.
 
 from mimic.openstack.common import cfg
-from mimic.openstack.common import importutils
 from mimic.openstack.common import wsgi
 
 from mimic.common import config

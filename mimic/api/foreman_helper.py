@@ -1,5 +1,4 @@
 import json
-import urllib
 import httplib2
 
 from mimic.openstack.common import cfg
@@ -10,7 +9,8 @@ def operating_system():
     unitedstack_os = "UnitedStackOS"
 
     h = httplib2.Http(".cache")
-    resp, content = h.request("%s/api/operatingsystems" % cfg.CONF.foreman_address, "GET")
+    resp, content = h.request("%s/api/operatingsystems" % \
+            cfg.CONF.foreman_address, "GET")
     systems = json.loads(content)
     for system in systems:
         if system['operatingsystem']['name'] == boot_from_local:
@@ -22,7 +22,8 @@ def operating_system():
 
 def host_groups():
     h = httplib2.Http(".cache")
-    resp, content = h.request("%s/api/hostgroups" % cfg.CONF.foreman_address, "GET")
+    resp, content = h.request("%s/api/hostgroups" \
+            % cfg.CONF.foreman_address, "GET")
     hostgroups = json.loads(content)
     outgroups={}
     for hostg in hostgroups:

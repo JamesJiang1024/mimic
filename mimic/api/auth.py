@@ -16,14 +16,9 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-import webob.dec
-import webob.exc
 
 from mimic.openstack.common import cfg
-from mimic.openstack.common import wsgi
 from mimic.openstack.common import log as logging
-
-from mimic.common import context
 
 
 LOG = logging.getLogger(__name__)
