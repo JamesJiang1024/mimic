@@ -1,3 +1,7 @@
 mimic.egg-info
 mimic /api/.cache/
 *.pyc
+.venv
+.coverage
+.tox
+cover*
