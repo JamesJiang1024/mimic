@@ -1,7 +1,7 @@
 import sys
 import setuptools
 
-from ironic.openstack.common import setup
+from mimic.openstack.common import setup
 
 requires = setup.parse_requirements()
 depend_links = setup.parse_dependency_links()
