@@ -1,3 +1,3 @@
-python-devevel
+python-devel
 gcc
 memcached
