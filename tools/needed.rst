@@ -4,3 +4,4 @@ memcached
 
 sqlalchemy
 python-memcached
+eventlet
