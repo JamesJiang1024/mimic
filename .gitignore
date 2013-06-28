@@ -5,3 +5,4 @@ mimic /api/.cache/
 .coverage
 .tox
 cover*
+build

@@ -1,13 +1,11 @@
 import sys
 import setuptools
 
+from ironic.openstack.common import setup
 
-requirements = []
+requires = setup.parse_requirements()
+depend_links = setup.parse_dependency_links()
 
-if sys.version_info < (2, 6):
-    requirements.append('simplejson')
-if sys.version_info < (2, 7):
-    requirements.append('argparse')
 
 setuptools.setup(
     name="mimic",
@@ -19,6 +17,7 @@ setuptools.setup(
     author='Jim Jiang',
     author_email='jiangwt100@gmail.com',
     packages=setuptools.find_packages(exclude=['bin', 'tests', 'tools']),
+    dependency_links=depend_links,
     classifiers=[
         'Development Status :: 1 - Beta',
         'Environment :: Console',
@@ -28,7 +27,7 @@ setuptools.setup(
         'Operating System :: OS Independent',
         'Programming Language :: Python',
     ],
-    install_requires=requirements,
+    install_requires=requires,
     scripts=[
         'bin/mimic-server',
     ],
