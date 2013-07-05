@@ -10,8 +10,8 @@ depend_links = setup.parse_dependency_links()
 setuptools.setup(
     name="mimic",
     version="0.1",
-    description="OpenStack Load Balancer Server",
-    long_description="OpenStack Load Balancer Server",
+    description="Mimic Server A Baremental Cache",
+    long_description="Mimic Server A Baremental Cache",
     url='https://github.com/jiangwt100/mimic',
     license='Apache',
     author='Jim Jiang',
