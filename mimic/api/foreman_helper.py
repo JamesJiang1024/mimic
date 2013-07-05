@@ -1,4 +1,5 @@
 import json
+import logging
 import httplib2
 
 from mimic.openstack.common import cfg
@@ -48,3 +49,6 @@ def create_host(host_info):
             "POST", body=json.dumps(data), \
             headers={'content-type': 'application/json'})
     return content
+
+if __name__ == "__main__":
+    hosts()
