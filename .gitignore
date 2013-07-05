@@ -6,3 +6,4 @@ mimic /api/.cache/
 .tox
 cover*
 build
+dist
