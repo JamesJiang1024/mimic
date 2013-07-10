@@ -20,7 +20,6 @@ import json
 from mimic.api import controller
 from mimic.api import foreman_helper
 from mimic.api import judgement
-from mimic.api import disk_partition
 from mimic.openstack.common import log as logging
 from mimic.openstack.common import wsgi
 
@@ -30,21 +29,17 @@ LOG = logging.getLogger(__name__)
 
 class Controller(controller.Controller):
     def create(self, req, **kwargs):
-        content=kwargs['body']
-        mac=content['mac']
-        local=content['local']
+        content = kwargs['body']
+        mac = content['mac']
+        local = content['local']
         hosts_num = foreman_helper.hosts() or {}
         host_info = {
-                'name': "us"+str(len(hosts_num)+1),
-                'mac': mac,
-                'build': True
+            'name': "us"+str(len(hosts_num)+1),
+            'mac': mac,
+            'build': True
         }
         if local == "no":
-            devices=content['devices']
-            raidcard=content['raidcard']
             hostgroup_id = judgement.judge_hostgroup()
-            partition = disk_partition.Partition(devices, raidcard)
-            host_info['disk'] = partition.parts
         else:
             hostgroup_id = foreman_helper.host_groups()['local']
 
@@ -52,7 +47,6 @@ class Controller(controller.Controller):
 
         LOG.info("Server To Post: %s" % host_info)
         return json.loads(foreman_helper.create_host(host_info))
-
 
     def delete(self, req, **kwargs):
         return True
