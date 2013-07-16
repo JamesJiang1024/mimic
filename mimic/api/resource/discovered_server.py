@@ -15,16 +15,14 @@
 #    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 #    License for the specific language governing permissions and limitations
 #    under the License.
-import memcache
-
 from mimic.openstack.common import log as logging
 from mimic.openstack.common import wsgi
-from mimic.openstack.common import cfg
 
 from mimic.api import controller
 
 
 LOG = logging.getLogger(__name__)
+mc = {}
 
 
 class Controller(controller.Controller):
@@ -40,27 +38,25 @@ class Controller(controller.Controller):
 
         for ins in inputs:
             ri = standard.pop(ins)
-            if ri == None:
+            if ri is None:
                 return False
 
         if standard != {}:
             return False
         return True
 
-
     def index(self, req, **kwargs):
         # info from cache
-        mc = memcache.Client([cfg.CONF.memcache_address])
         discovered_cache = mc.get("discovered_new") or []
 
         LOG.info("Get discovered Server Into Cache: %s" % discovered_cache)
         for server in discovered_cache:
             server['status'] = "pendding"
-            mc.set(str(server['uuid']), server)
+            mc[str(server['uuid'])] = server
 
         # reset cache
         result = mc.get("discovered_new")
-        mc.set("discovered_new", {})
+        mc["discovered_new"] = {}
         return {"data": result}
 
     def create(self, req, **kwargs):
@@ -73,36 +69,34 @@ class Controller(controller.Controller):
         #discover new machine
 
         #read data from cache
-        mc = memcache.Client([cfg.CONF.memcache_address])
         discovered_cache = mc.get("discovered_new") or []
 
         #append server to cache
         name = "HD" + str(len(discovered_cache))
         discovered_server['name'] = name
         discovered_cache.append(discovered_server)
-        mc.set("discovered_new", discovered_cache)
+        mc["discovered_new"] = discovered_cache
         LOG.info("Now Cached Servers: %s" % discovered_cache)
 
         return {"data": discovered_cache}
 
     def update(self, req, **kwargs):
-        mc = memcache.Client([cfg.CONF.memcache_address])
 
         server_id = kwargs['id']
         server = mc.get(str(server_id))
         LOG.info("Update discovered Server Status Before: %s" % server)
 
         server['status'] = kwargs['body']['status']
-        mc.set(str(server_id), server)
+        mc[str(server_id)] = server
         LOG.info("Update discovered Server Status After: %s" % server)
 
         return {"data": server}
 
     def show(self, req, **kwargs):
-        mc = memcache.Client([cfg.CONF.memcache_address])
         server_id = kwargs['id']
         server = mc.get(str(server_id))
         return {"data": server}
+
 
 def create_resource():
     return wsgi.Resource(Controller())

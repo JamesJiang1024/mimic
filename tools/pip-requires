@@ -12,4 +12,3 @@ anyjson==0.2.4
 kombu==1.0.4
 argparse
 sqlalchemy
-python-memcached
