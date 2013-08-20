@@ -1,3 +1,0 @@
-python-devel
-gcc
-memcached
