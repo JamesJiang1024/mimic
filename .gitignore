@@ -7,3 +7,4 @@ mimic /api/.cache/
 cover*
 build
 dist
+.testrepository/
