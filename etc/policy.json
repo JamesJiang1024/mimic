@@ -1,0 +1,17 @@
+{
+   "enable_galera":{
+       "key": 2013,
+       "driver": "enable_driver",
+       "format": true 
+   },
+   "enable_openstack":{
+       "key": 2013,
+       "driver": "enable_driver",
+       "format": true 
+   }
+   "is_fist_node":{
+       "key": 1024,
+       "driver": "first_node_driver",
+       "format": true 
+   }
+}
