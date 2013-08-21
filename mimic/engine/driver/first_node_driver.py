@@ -36,7 +36,7 @@ class FirstNodeDriver(base.BaseSmartParameter):
             value = False
 
         lookup_values = {
-            "match": "fqdn=%s.ustack.com" % hostname,
+            "match": "fqdn=%s.ustack.in" % hostname,
             "value": value,
             "lookup_key_id": self.key
         }

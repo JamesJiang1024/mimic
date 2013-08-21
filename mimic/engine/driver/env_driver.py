@@ -22,7 +22,7 @@ from mimic.engine.driver import base
 from mimic.db import api
 
 
-class EnableDriver(base.BaseSmartParameter):
+class EnvDriver(base.BaseSmartParameter):
 
     def __init__(self, key, format):
         self.key = key
@@ -30,13 +30,25 @@ class EnableDriver(base.BaseSmartParameter):
         self.dbapi = api.get_instance()
 
     def action(self, count, hostname, **kwargs):
+        strs = self.format.split(";")
+        removed = ""
+        for stra in strs:
+            if "env=" in stra:
+                passd = stra.split("=")[1]
+                removed = stra
+        matched_value = self.dbapi.find_lookup_value_by_match("env=%s"
+                                                            % passd)[0].value
+        result = self.format
+        result = result.replace(removed, matched_value)
+        result = result.replace(";", "")
+
         lookup_values = {
             "match": "fqdn=%s.ustack.in" % hostname,
-            "value": self.format,
+            "value": result,
             "lookup_key_id": self.key
         }
         self.dbapi.create_lookup_value(lookup_values)
 
 
 def get_backend(key, format):
-    return EnableDriver(key, format)
+    return EnvDriver(key, format)

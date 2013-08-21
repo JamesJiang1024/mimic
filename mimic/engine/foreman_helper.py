@@ -3,6 +3,7 @@ import logging
 import httplib2
 
 from oslo.config import cfg
+from mimic.db import api
 
 LOG = logging.getLogger(__name__)
 
@@ -39,6 +40,26 @@ def hosts():
     resp, content = h.request("%s/api/hosts" % cfg.CONF.foreman_address, "GET")
     hosts = json.loads(content)
     return hosts
+
+
+def host_detail(id):
+    h = httplib2.Http(".cache")
+    resp, content = h.request("%s/api/hosts/%s" %
+                              (cfg.CONF.foreman_address, id), "GET")
+    host = json.loads(content)
+    return host
+
+
+def unused_ip(mac):
+    dbapi = api.get_instance()
+    result = dbapi.find_lookup_value_by_match("env=subnet")
+    subnet = result[0].value
+    h = httplib2.Http(".cache")
+    resp, content = h.request("%s/dhcp/%s/unused_ip?mac=%s" %
+                              (cfg.CONF.foreman_proxy_address,
+                               subnet, mac), "GET")
+    ip = json.loads(content)['ip']
+    return ip
 
 
 def create_host(host_info):

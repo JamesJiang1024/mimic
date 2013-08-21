@@ -1,17 +1,86 @@
 {
    "enable_galera":{
-       "key": 2013,
+       "key": 2613,
        "driver": "enable_driver",
-       "format": true 
+       "format": true
    },
    "enable_openstack":{
-       "key": 2013,
+       "key": 2591,
        "driver": "enable_driver",
-       "format": true 
-   }
+       "format": true
+   },
    "is_fist_node":{
        "key": 1024,
        "driver": "first_node_driver",
-       "format": true 
+       "format": true
+   },
+   "db_host":{
+       "key": 1024,
+       "driver": "enable_driver",
+       "format": "m1.cluster1.ustack.com"
+   },
+   "mirror_url":{
+       "key": 1024,
+       "driver": "enable_driver",
+       "format": "m1.cluster1.ustack.com"
+   },
+   "dns_server":{
+       "key": 1024,
+       "driver": "enable_driver",
+       "format": "m1.cluster1.ustack.com"
+   },
+   "foreman_url":{
+       "key": 1024,
+       "driver": "enable_driver",
+       "format": "m1.cluster1.ustack.com"
+   },
+  "puppetmaster_url":{
+       "key": 1024,
+       "driver": "enable_driver",
+       "format": "m1.cluster1.ustack.com"
+   },
+  "public_address":{
+       "key": 1024,
+       "driver": "enable_driver",
+       "format": "m1.cluster1.ustack.com"
+   }, "rabbit_host":{
+       "key": 1024,
+       "driver": "enable_driver",
+       "format": "m1.cluster1.ustack.com"
+   },
+  "keystone_host":{
+       "key": 1024,
+       "driver": "enable_driver",
+       "format": "m1.cluster1.ustack.com"
+   },
+  "glance_host":{
+       "key": 1024,
+       "driver": "enable_driver",
+       "format": "m1.cluster1.ustack.com"
+   },
+  "vncproxy_host":{
+       "key": 1024,
+       "driver": "enable_driver",
+       "format": "m1.cluster1.ustack.com"
+   },
+  "dhcp_range":{
+       "key": 10000,
+       "driver": "env_driver",
+       "format": "env=dhcp_range"
+   },
+  "vip_address":{
+       "key": 1024,
+       "driver": "base_line_ip_driver",
+       "format": "192.168.10.11"
+   },
+  "mirror_members":{
+       "key": 7459,
+       "driver": "list_increment_driver",
+       "format": "ipaddr:8000 weight=1 max_fails=0 fail_timeout=60s"
+   },
+  "foreman_members":{
+       "key": 7658,
+       "driver": "list_increment_driver",
+       "format": "ipaddr:3001 weight=1 max_fails=0 fail_timeout=60s"
    }
 }

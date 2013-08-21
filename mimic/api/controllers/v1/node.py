@@ -3,6 +3,7 @@ from oslo.config import cfg
 from mimic.openstack.common import jsonutils
 
 from mimic.engine import foreman_helper
+from mimic.db import api
 from mimic.engine import judgement
 from mimic.common.wsmeext import pecan as wsme_pecan
 from mimic.openstack.common import log as logging
@@ -36,11 +37,14 @@ class NodeController(rest.RestController):
 
     @wsme_pecan.wsexpose(unicode, unicode, body=unicode)
     def post(self, content):
+        dbapi = api.get_instance()
         mac = content['mac']
         local = content['local']
         hosts_num = foreman_helper.hosts() or {}
+        ipaddr = foreman_helper.unused_ip(mac)
         host_info = {
             'name': "us" + str(len(hosts_num) + 1),
+            'ip': ipaddr,
             'mac': mac,
             'build': True
         }
@@ -52,6 +56,6 @@ class NodeController(rest.RestController):
         drivers = self._load_drivers()
         host_info['hostgroup_id'] = hostgroup_id
         for driver in drivers:
-            driver.action(len(hosts_num) + 1, host_info['name'])
+            driver.action(len(hosts_num) + 1, host_info['name'], ip=ipaddr)
         LOG.info("Server To Post: %s" % host_info)
         return jsonutils.loads(foreman_helper.create_host(host_info))

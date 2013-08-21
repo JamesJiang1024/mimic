@@ -4,6 +4,7 @@
 
 from mimic.api.controllers.v1 import discovered_server
 from mimic.api.controllers.v1 import node
+from mimic.api.controllers.v1 import env
 
 
 class Controller(object):
@@ -11,3 +12,4 @@ class Controller(object):
 
     discovered_servers = discovered_server.DiscoveredServerController()
     nodes = node.NodeController()
+    envs = env.EnvController()

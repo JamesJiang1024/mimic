@@ -22,7 +22,7 @@ from mimic.engine.driver import base
 from mimic.db import api
 
 
-class EnableDriver(base.BaseSmartParameter):
+class BaseLineIpDriver(base.BaseSmartParameter):
 
     def __init__(self, key, format):
         self.key = key
@@ -30,13 +30,23 @@ class EnableDriver(base.BaseSmartParameter):
         self.dbapi = api.get_instance()
 
     def action(self, count, hostname, **kwargs):
+        base_ips = self.format.split(".")
+        last = int(base_ips[-1]) + count
+        rebuild_api = ""
+        c = 0
+        for ip in base_ips:
+            c += 1
+            if c <= 3:
+                rebuild_api += ip + "."
+            else:
+                rebuild_api += str(last)
         lookup_values = {
             "match": "fqdn=%s.ustack.in" % hostname,
-            "value": self.format,
+            "value": rebuild_api,
             "lookup_key_id": self.key
         }
         self.dbapi.create_lookup_value(lookup_values)
 
 
 def get_backend(key, format):
-    return EnableDriver(key, format)
+    return BaseLineIpDriver(key, format)

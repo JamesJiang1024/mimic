@@ -50,3 +50,11 @@ class Connection(object):
         :param lookup_value: uuid of the lookup_value
         :return: a lookup_value
         """
+
+    @abc.abstractmethod
+    def find_lookup_value_by_id_match(self, match, lookup_key_id):
+        """get lookup_values by id of and uuid.
+
+        :param lookup_value: uuid of the lookup_value
+        :return: a lookup_value
+        """

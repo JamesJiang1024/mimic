@@ -80,6 +80,17 @@ class Connection(api.Connection):
             ref = query.one()
         return ref
 
+    def find_lookup_value_by_match(self, match):
+        query = model_query(models.LookupValue)
+        query = query.filter_by(match=match)
+        return query.all()
+
+    def find_lookup_value_by_id_match(self, match, lookup_key_id):
+        query = model_query(models.LookupValue)
+        query = query.filter_by(match=match)
+        query = query.filter_by(lookup_key_id=lookup_key_id)
+        return query.all()
+
     def get_lookup_value(self, lookup_value):
         query = model_query(models.LookupValue)
         query = add_identity_filter(query, lookup_value)
