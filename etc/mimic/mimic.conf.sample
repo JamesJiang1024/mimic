@@ -1,13 +1,12 @@
 [DEFAULT]
-#api
 debug=True
 verbose = True
 mimic_api_port=9100
-
-#engine
-foreman_address=http://192.168.3.218:3000
+foreman_address=http://192.168.10.14:3000
+foreman_proxy_address=http://192.168.10.14:8443
 rule_begin="count=20;master=3;compute=max"
 rule_increase="count=10;master=1;compute=max"
 
 [database]
-connection=sqlite:////opt/db/mimic.sqlite
+#connection=sqlite:////opt/db/mimic.sqlite
+connection = mysql://root:root@192.168.10.14/foreman
