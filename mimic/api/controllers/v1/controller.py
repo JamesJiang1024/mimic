@@ -5,6 +5,8 @@
 from mimic.api.controllers.v1 import discovered_server
 from mimic.api.controllers.v1 import node
 from mimic.api.controllers.v1 import env
+from mimic.api.controllers.v1 import network
+from mimic.api.controllers.v1 import puppet
 
 
 class Controller(object):
@@ -13,3 +15,5 @@ class Controller(object):
     discovered_servers = discovered_server.DiscoveredServerController()
     nodes = node.NodeController()
     envs = env.EnvController()
+    networks = network.NetworkController()
+    puppets = puppet.PuppetController()
