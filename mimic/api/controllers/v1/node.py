@@ -40,8 +40,14 @@ class NodeController(rest.RestController):
         dbapi = api.get_instance()
         mac = content['mac']
         local = content['local']
+        ip = None
+        if content['ip'] is not None:
+            ip = content['ip']
         hosts_num = foreman_helper.hosts() or {}
-        ipaddr = foreman_helper.unused_ip(mac)
+        if not ip:
+            ipaddr = foreman_helper.unused_ip(mac)
+        else:
+            ipaddr = ip
         host_info = {
             'name': "us" + str(len(hosts_num) + 1),
             'ip': ipaddr,
