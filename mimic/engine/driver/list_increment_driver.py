@@ -34,7 +34,7 @@ class ListIncrementDriver(base.BaseSmartParameter):
         ip = kwargs['ip']
         master_id = foreman_helper.host_groups()['master']
         hosts = foreman_helper.hosts()
-        result = []
+        result = ""
         selected_lookup = []
         for host in hosts:
             if host['host']['hostgroup_id'] == master_id:
@@ -43,9 +43,13 @@ class ListIncrementDriver(base.BaseSmartParameter):
                         find_lookup_value_by_id_match("fqdn=%s" % hn,
                                                           self.key)[0]
                 selected_lookup.append(lv.id)
-                result = eval(lv.value)
+                result = lv.value
         form = self.format.replace("ipaddr", ip)
-        result.append(form)
+        if result == "":
+            result = "---"
+            result += " \n - %s" % form
+        else:
+            result += " \n - %s" % form
         for selected_lu in selected_lookup:
             lookup_values = {
                 "value": str(result),
