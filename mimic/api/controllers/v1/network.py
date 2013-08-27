@@ -1,5 +1,7 @@
+import commands
 from pecan import rest
 from mimic.db import api
+from mimic.engine import foreman_helper
 from mimic.common.wsmeext import pecan as wsme_pecan
 
 
@@ -12,6 +14,12 @@ class NetworkController(rest.RestController):
         subnet = content['subnet']
         self.update_env_key_value("dhcp_range", dhcp_range)
         self.update_env_key_value("subnet", subnet)
+        result = {
+            "dhcp_range": dhcp_range,
+            "subnet": subnet
+        }
+        foreman_helper.build_pxe_default()
+        return result
 
     @wsme_pecan.wsexpose(unicode)
     def get(self):

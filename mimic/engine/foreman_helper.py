@@ -42,12 +42,29 @@ def hosts():
     return hosts
 
 
+def build_pxe_default():
+    h = httplib2.Http(".cache")
+    resp, content = h.request("%s/api/config_templates/build_pxe_default"
+                              % cfg.CONF.foreman_address, "GET")
+    return content
+
+
 def host_detail(id):
     h = httplib2.Http(".cache")
     resp, content = h.request("%s/api/hosts/%s" %
                               (cfg.CONF.foreman_address, id), "GET")
     host = json.loads(content)
     return host
+
+
+def self_post(mac):
+    h = httplib2.Http(".cache")
+    node = {
+        "mac": mac,
+        "local": "no"
+    }
+    resp, content = h.request("http://localhost:9100/v1/nodes", "POST",
+                              body=json.dumps(node))
 
 
 def unused_ip(mac):
