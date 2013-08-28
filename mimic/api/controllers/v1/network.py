@@ -16,7 +16,7 @@ class NetworkController(rest.RestController):
         self.update_env_key_value("subnet", subnet)
         result = {
             "dhcp_range": dhcp_range,
-            "subnet": subnet
+            "subnet": subnet,
         }
         foreman_helper.build_pxe_default()
         return result
@@ -26,9 +26,15 @@ class NetworkController(rest.RestController):
         dbapi = api.get_instance()
         dhcp_range = dbapi.find_lookup_value_by_match("env=dhcp_range")
         subnet = dbapi.find_lookup_value_by_match("env=subnet")
+        netmask = dbapi.find_lookup_value_by_match("env=netmask")
+        gateway = dbapi.find_lookup_value_by_match("env=gateway")
+        master_ip = dbapi.find_lookup_value_by_match("env=master_ip")
         network = {
             "dhcp_range": dhcp_range[0].value,
-            "subnet": subnet[0].value
+            "subnet": subnet[0].value,
+            "netmask": int(netmask[0].value),
+            "gateway": gateway[0].value,
+            "master_ip": master_ip[0].value
         }
         return network
 
