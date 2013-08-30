@@ -41,7 +41,7 @@ class NodeController(rest.RestController):
         mac = content['mac']
         local = content['local']
         ip = None
-        if content['ip'] is not None:
+        if content.has_key("ip"):
             ip = content['ip']
         hosts_num = foreman_helper.hosts() or {}
         if not ip:

@@ -1,87 +1,67 @@
 {
-   "us_enable_galera":{
-       "key": 2712,
-       "driver": "enable_driver",
-       "format": true 
-   },
    "us_enable_openstack":{
        "key": 2678,
        "driver": "enable_driver",
-       "format": true 
+       "format": true
    },
-   "us_fist_node":{
+   "us_first_node":{
        "key": 2701,
        "driver": "first_node_driver",
-       "format": true 
+       "format": true
    },
    "us_db_host":{
        "key": 2698,
        "driver": "enable_driver",
-       "format": "m1.cluster1.ustack.com" 
+       "format": "us1.ustack.in"
    },
    "us_mirror_url":{
        "key": 2689,
        "driver": "enable_driver",
-       "format": "m1.cluster1.ustack.com" 
+       "format": "us1.ustack.in"
    },
    "us_dns_server":{
        "key": 2659,
        "driver": "enable_driver",
-       "format": "m1.cluster1.ustack.com" 
+       "format": "us1.ustack.in"
    },
    "us_foreman_url":{
        "key": 2706,
        "driver": "enable_driver",
-       "format": "m1.cluster1.ustack.com" 
+       "format": "us1.ustack.in"
    },
   "us_puppetmaster_url":{
        "key": 2676,
        "driver": "enable_driver",
-       "format": "m1.cluster1.ustack.com" 
+       "format": "us1.ustack.in"
    },
   "us_public_address":{
        "key": 2656,
        "driver": "enable_driver",
-       "format": "m1.cluster1.ustack.com" 
-   }, 
+       "format": "us1.ustack.in"
+   },
   "us_rabbit_host":{
        "key": 2657,
        "driver": "enable_driver",
-       "format": "m1.cluster1.ustack.com" 
+       "format": "us1.ustack.in"
    },
   "us_keystone_host":{
        "key": 2692,
        "driver": "enable_driver",
-       "format": "m1.cluster1.ustack.com" 
+       "format": "us1.ustack.in"
    },
   "us_glance_host":{
        "key": 2711,
        "driver": "enable_driver",
-       "format": "m1.cluster1.ustack.com" 
+       "format": "us1.ustack.in"
    },
   "us_vncproxy_host":{
        "key": 2710,
        "driver": "enable_driver",
-       "format": "m1.cluster1.ustack.com" 
+       "format": "us1.ustack.in"
    },
   "us_dhcp_range":{
        "key": 2661,
        "driver": "env_driver",
        "format": "env=dhcp_range"
-   },
-  "us_vip_address":{
-       "key": 2663,
-       "driver": "base_line_ip_driver",
-       "format": "192.168.10.11" 
-   },
-  "us_mirror_members":{
-       "key": 2693,
-       "driver": "list_increment_driver",
-       "format": "ipaddr:8000 weight=1 max_fails=0 fail_timeout=60s"
-   }, 
-  "us_foreman_members":{
-       "key": 2696,
-       "driver": "list_increment_driver",
-       "format": "ipaddr:3001 weight=1 max_fails=0 fail_timeout=60s"
-   } 
+   }
 }
