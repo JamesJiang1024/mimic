@@ -49,7 +49,7 @@ class NetworkController(rest.RestController):
         #subnet_status = network_scan.subnet_scan(gateway, master_ip)
         subnet_status = True
         result = {
-            "dhcp_status": True,
+            "dhcp_status": dhcp_status,
             "gateway_status": gateway_status,
             "subnet_status": subnet_status
         }
