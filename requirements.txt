@@ -13,3 +13,4 @@ WSME>=0.5b2
 MySQL-python
 oslo.config
 httplib2
+scapy-real

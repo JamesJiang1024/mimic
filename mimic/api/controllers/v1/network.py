@@ -2,6 +2,7 @@ import commands
 from pecan import rest
 from mimic.db import api
 from mimic.engine import foreman_helper
+from mimic.engine import network_scanning as network_scan
 from mimic.common.wsmeext import pecan as wsme_pecan
 
 
@@ -40,10 +41,17 @@ class NetworkController(rest.RestController):
 
     @wsme_pecan.wsexpose(unicode, unicode)
     def get_one(self, status):
+        dbapi = api.get_instance()
+        gateway = dbapi.find_lookup_value_by_match("env=gateway")
+        master_ip = dbapi.find_lookup_value_by_match("env=master_ip")
+        #dhcp_status = network_scan.dhcp_scan()
+        gateway_status = network_scan.gateway_scan(gateway)
+        #subnet_status = network_scan.subnet_scan(gateway, master_ip)
+        subnet_status = True
         result = {
             "dhcp_status": True,
-            "gateway_status": True,
-            "subnet_status": True
+            "gateway_status": gateway_status,
+            "subnet_status": subnet_status
         }
         return result
 
