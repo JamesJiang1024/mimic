@@ -59,7 +59,11 @@ class DiscoveredServerController(rest.RestController):
 
         # reset cache
         result = mc.get("discovered_new")
-        mc["discovered_new"] = {}
+        mc["discovered_new"] = []
+
+        if not result:
+            result = []
+
         return {"data": result}
 
     @wsme_pecan.wsexpose(unicode, unicode, body=unicode)
