@@ -19,15 +19,12 @@ Enable Driver and supporting meta-classes
 """
 
 from mimic.engine.driver import base
-from mimic.db import api
 
 
 class BaseLineIpDriver(base.BaseSmartParameter):
 
-    def __init__(self, key, format):
-        self.key = key
-        self.format = format
-        self.dbapi = api.get_instance()
+    def __init__(self, name, format, classes, role):
+        base.BaseSmartParameter.__init__(self, name, format, classes, role)
 
     def action(self, count, hostname, **kwargs):
         base_ips = self.format.split(".")
@@ -48,5 +45,5 @@ class BaseLineIpDriver(base.BaseSmartParameter):
         self.dbapi.create_lookup_value(lookup_values)
 
 
-def get_backend(key, format):
-    return BaseLineIpDriver(key, format)
+def get_backend(name, format, classes, role):
+    return BaseLineIpDriver(name, format, classes, role)

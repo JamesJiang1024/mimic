@@ -58,3 +58,9 @@ class Connection(object):
         :param lookup_value: uuid of the lookup_value
         :return: a lookup_value
         """
+
+    @abc.abstractmethod
+    def get_lookup_key(self, key, puppet_class):
+        """
+        get lookup_key id
+        """

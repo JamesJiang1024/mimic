@@ -4,6 +4,7 @@ from mimic.common.wsmeext import pecan as wsme_pecan
 from mimic.openstack.common import log as logging
 from wsme import types as wtypes
 from mimic.api.controllers.v1 import base
+from mimic.db import api as api
 
 
 LOG = logging.getLogger(__name__)
@@ -41,6 +42,8 @@ class DiscoveredServerController(rest.RestController):
 
     @wsme_pecan.wsexpose(unicode, unicode, unicode)
     def get_one(self, server_id):
+        dbapi = api.get_instance()
+        dbapi.get_lookup_key("db_host", "sunfire::compute")
         server = mc.get(str(server_id))
         return {"data": server}
 

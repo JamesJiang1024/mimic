@@ -100,3 +100,20 @@ class Connection(api.Connection):
         except NoResultFound:
             raise exception.LookupValueNotFound(lookup_value=lookup_value)
         return result
+
+    def _get_puppet_classes_id(self, puppet_class):
+        query = model_query(models.PuppetClasses)
+        query = query.filter_by(name=puppet_class)
+        return query.one()
+
+    def get_lookup_key(self, key, puppet_class):
+        puppet_class_id = self._get_puppet_classes_id(puppet_class).id
+        query = model_query(models.EnvironmentClasses.lookup_key_id)
+        query = query.filter_by(puppetclass_id=puppet_class_id)
+        result1 = [i[0] for i in query.all()]
+
+        query = model_query(models.LookupKey.id)
+        query = query.filter_by(key=key)
+        result2 = [i[0] for i in query.all()]
+        result = list(set(result1) & set(result2))
+        return result

@@ -11,39 +11,59 @@ class NetworkController(rest.RestController):
 
     @wsme_pecan.wsexpose(unicode, unicode, body=unicode)
     def post(self, content):
+        """
+        post foreman information
+        """
         dhcp_range = content['dhcp_range']
         subnet = content['subnet']
-        self.update_env_key_value("dhcp_range", dhcp_range)
-        self.update_env_key_value("subnet", subnet)
+        self._update_env_key_value("dhcp_range", dhcp_range)
+        self._update_env_key_value("subnet", subnet)
         result = {
             "dhcp_range": dhcp_range,
-            "subnet": subnet,
+            "subnet": subnet
         }
         foreman_helper.build_pxe_default()
         return result
 
     @wsme_pecan.wsexpose(unicode)
     def get(self):
+        """
+        get global infomation of unitedstack os from foreman db
+
+        """
         dbapi = api.get_instance()
-        dhcp_range = dbapi.find_lookup_value_by_match("env=dhcp_range")
-        subnet = dbapi.find_lookup_value_by_match("env=subnet")
-        netmask = dbapi.find_lookup_value_by_match("env=netmask")
-        gateway = dbapi.find_lookup_value_by_match("env=gateway")
-        master_ip = dbapi.find_lookup_value_by_match("env=master_ip")
-        network = {
-            "dhcp_range": dhcp_range[0].value,
-            "subnet": subnet[0].value,
-            "netmask": int(netmask[0].value),
-            "gateway": gateway[0].value,
-            "master_ip": master_ip[0].value
+        networklist = {
+            "dhcp_range": None,
+            "subnet": None,
+            "netmask": None,
+            "gateway": None,
+            "master_ip": None
         }
-        return network
+        for network in networklist:
+            value = dbapi.find_lookup_value_by_match("env=%s" % network)
+            if len(value) > 0:
+                if network != "netmask":
+                    networklist[network] = value[0].value
+                else:
+                    networklist[network] = int(value[0].value)
+        return networklist
 
     @wsme_pecan.wsexpose(unicode, unicode)
     def get_one(self, status):
+        """
+        scanning network status
+
+        scan if dhcp is exist, gateway is ok and subnet can be used
+        """
         dbapi = api.get_instance()
-        gateway = dbapi.find_lookup_value_by_match("env=gateway")[0].value
-        master_ip = dbapi.find_lookup_value_by_match("env=master_ip")[0].value
+        try:
+            gateway = dbapi.find_lookup_value_by_match("env=gateway")[0].value
+            master_ip = dbapi.\
+                    find_lookup_value_by_match("env=master_ip")[0].value
+        except:
+            return {
+                "error": "system error with no master_ip and gateway"
+            }
         dhcp_status = network_scan.dhcp_scan()
         gateway_status = network_scan.gateway_scan(gateway)
         #subnet_status = network_scan.subnet_scan(gateway, master_ip)
@@ -55,7 +75,14 @@ class NetworkController(rest.RestController):
         }
         return result
 
-    def update_env_key_value(self, key, value):
+    def _update_env_key_value(self, key, value):
+        """
+        update the global parameter key and value
+
+        key: global parameter key
+        value: global parameter value
+        """
+
         dbapi = api.get_instance()
         lookup_values = {
             "match": "env=%s" % key,
@@ -64,7 +91,7 @@ class NetworkController(rest.RestController):
         }
         result = dbapi.find_lookup_value_by_match("env=%s" % key)
         if len(result) > 0:
-            return {"error": "fail to add same env"}
+            dbapi.update_lookup_value(result[0].id, lookup_values)
 
         dbapi.create_lookup_value(lookup_values)
         return lookup_values

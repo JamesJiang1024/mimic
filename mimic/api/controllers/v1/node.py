@@ -29,10 +29,11 @@ class NodeController(rest.RestController):
         policys = jsonutils.load(po)
         drivers = []
         for key in policys:
-            lookup_key_id = policys[key]['key']
             format = policys[key]['format']
+            role = policys[key]['role']
+            classes = policys[key]['class']
             driver = base.get_instance(policys[key]['driver'])
-            drivers.append(driver.get_backend(lookup_key_id, format))
+            drivers.append(driver.get_backend(key, format, classes, role))
         return drivers
 
     @wsme_pecan.wsexpose(unicode, unicode, body=unicode)
@@ -54,14 +55,20 @@ class NodeController(rest.RestController):
             'mac': mac,
             'build': True
         }
+        host_groups = foreman_helper.host_groups()
+        role = "master"
         if local == "no":
             hostgroup_id = judgement.judge_hostgroup()
         else:
-            hostgroup_id = foreman_helper.host_groups()['local']
+            hostgroup_id = host_groups['local']
+        for ro in host_groups:
+            if host_groups[ro] == hostgroup_id:
+                role = ro
 
         drivers = self._load_drivers()
         host_info['hostgroup_id'] = hostgroup_id
         for driver in drivers:
-            driver.action(len(hosts_num) + 1, host_info['name'], ip=ipaddr)
+            if role == driver.role:
+                driver.action(len(hosts_num) + 1, host_info['name'], ip=ipaddr)
         LOG.info("Server To Post: %s" % host_info)
         return jsonutils.loads(foreman_helper.create_host(host_info))

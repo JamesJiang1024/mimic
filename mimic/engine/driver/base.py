@@ -20,6 +20,7 @@ Abstract base classes for drivers.
 
 import abc
 from mimic.openstack.common import importutils
+from mimic.db import api
 
 
 def get_instance(driver):
@@ -33,12 +34,18 @@ class BaseSmartParameter(object):
 
     __metaclass__ = abc.ABCMeta
 
-    key = None
-    value = None
+    def __init__(self, name, format, classes, role):
+        self.role = role
+        self.name = name
+        self.format = format
+        self.classes = classes
+        self.dbapi = api.get_instance()
+        self._get_lookup_key_id()
 
-    @abc.abstractmethod
-    def __init__(self, key, format):
-        pass
+    def _get_lookup_key_id(self):
+        keys = self.dbapi.get_lookup_key(self.name, self.classes)
+        if len(keys) > 0:
+            self.key = keys[0]
 
     @abc.abstractmethod
     def action(self, count, hostname, **kwargs):

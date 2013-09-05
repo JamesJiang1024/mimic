@@ -19,15 +19,12 @@ Enable Driver and supporting meta-classes
 """
 
 from mimic.engine.driver import base
-from mimic.db import api
 
 
 class EnableDriver(base.BaseSmartParameter):
 
-    def __init__(self, key, format):
-        self.key = key
-        self.format = format
-        self.dbapi = api.get_instance()
+    def __init__(self, name, format, classes, role):
+        base.BaseSmartParameter.__init__(self, name, format, classes, role)
 
     def action(self, count, hostname, **kwargs):
         lookup_values = {
@@ -38,5 +35,5 @@ class EnableDriver(base.BaseSmartParameter):
         self.dbapi.create_lookup_value(lookup_values)
 
 
-def get_backend(key, format):
-    return EnableDriver(key, format)
+def get_backend(name, format, classes, role):
+    return EnableDriver(name, format, classes, role)
