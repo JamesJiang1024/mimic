@@ -25,12 +25,18 @@ class NetworkController(rest.RestController):
         foreman_helper.build_pxe_default()
         return result
 
+    def _update_network_info(self):
+        network_info = network_scan.get_network_info_from_file()
+        for ni in network_info:
+            self._update_env_key_value(ni, network_info[ni])
+
     @wsme_pecan.wsexpose(unicode)
     def get(self):
         """
         get global infomation of unitedstack os from foreman db
 
         """
+        self._update_network_info()
         dbapi = api.get_instance()
         networklist = {
             "dhcp_range": None,

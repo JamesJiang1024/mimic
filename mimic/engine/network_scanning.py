@@ -4,6 +4,7 @@
 # vim: tabstop=4 shiftwidth=4 softtabstop=4
 
 from scapy.all import *
+import ConfigParser
 
 
 def dhcp_scan():
@@ -42,3 +43,15 @@ def gateway_scan(gateway):
         return True
     else:
         return False
+
+
+def get_network_info_from_file():
+    config = ConfigParser.ConfigParser()
+    network_info = {}
+    with open("/tmp/unitedstack.cfg", "rw") as cfgfile:
+        config.readfp(cfgfile)
+        network_info['subnet'] = config.get("network", "subnet")
+        network_info['master'] = config.get("network", "master_ip")
+        network_info['gateway'] = config.get("network", "gateway")
+        network_info['netmask'] = config.get("network", "netmask")
+    return network_info

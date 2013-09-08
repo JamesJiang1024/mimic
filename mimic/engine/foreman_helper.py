@@ -1,8 +1,8 @@
 import json
 import logging
 import httplib2
-
 from oslo.config import cfg
+
 from mimic.db import api
 
 LOG = logging.getLogger(__name__)
@@ -57,16 +57,6 @@ def host_detail(id):
     return host
 
 
-def self_post(mac):
-    h = httplib2.Http(".cache")
-    node = {
-        "mac": mac,
-        "local": "no"
-    }
-    resp, content = h.request("http://localhost:9100/v1/nodes", "POST",
-                              body=json.dumps(node))
-
-
 def unused_ip(mac):
     dbapi = api.get_instance()
     result = dbapi.find_lookup_value_by_match("env=subnet")
@@ -87,6 +77,3 @@ def create_host(host_info):
             "POST", body=json.dumps(data),
             headers={'content-type': 'application/json'})
     return content
-
-if __name__ == "__main__":
-    hosts()
