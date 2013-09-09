@@ -8,6 +8,6 @@ class UserController(rest.RestController):
 
     @wsme_pecan.wsexpose(unicode, unicode, body=unicode)
     def post(self, content):
-        resp, content = keystone_helper.\
+        result = keystone_helper.\
                 create_admin(content['username'], content['password'])
-        return resp, content
+        return "{'result': 'ok'}"

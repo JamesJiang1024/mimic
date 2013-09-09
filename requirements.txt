@@ -7,10 +7,11 @@ iso8601>=0.1.4
 netaddr>=0.7.6
 argparse
 eventlet
-python-keystoneclient>=0.2.0
-pecan>=0.2.0
+python-keystoneclient==0.3.1
+pecan==0.3.2
 WSME>=0.5b2
 MySQL-python
 oslo.config
 httplib2
 scapy-real
+tailer

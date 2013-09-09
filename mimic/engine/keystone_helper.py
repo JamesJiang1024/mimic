@@ -16,27 +16,14 @@
 #    under the License.
 """ Client For Call Keystone"""
 
-import httplib2
-from mimic.openstack.common import jsonutils
+from keystoneclient.v3 import client
 
 from oslo.config import cfg
 
 keystone_opts = [
-    cfg.StrOpt('admin_tenant_id',
-               default='14f905713c30496d8d14ddf153216a68',
-               help=('Admin Tenant ID'),
-               ),
-    cfg.StrOpt('admin_user_id',
-               default='c4b6e154c1964313950e850af98689f2',
-               help=('Admin User ID'),
-               ),
     cfg.StrOpt('admin_password',
                default='admin',
                help=('Keystone Admin Password'),
-             ),
-    cfg.StrOpt('admin_role_id',
-               default='f8a4a80076f749d9b30790999ebe937d',
-               help=('Keystone Admin Role'),
              ),
     cfg.StrOpt('auth_url',
                default='http://192.168.10.11:35357/v3',
@@ -47,64 +34,21 @@ CONF = cfg.CONF
 CONF.register_opts(keystone_opts)
 
 
+keystone_client = client.Client(username="admin", auth_url=CONF.auth_url,
+                            project_name="admin", password=CONF.admin_password)
+
+
 def create_admin(username, password):
-    token = get_token()
-    create_user(token, username, password)
-    return authority(token)
+    user = keystone_client.users.create(username, password=password)
+    project = None
+    role = None
+    for pro in keystone_client.projects.list():
+        if pro.name == "admin":
+            project = pro
 
+    for ro in keystone_client.roles.list():
+        if ro.name == "admin":
+            role = ro
 
-def create_user(token, username, password):
-    post_data = {
-       "user": {
-       "enabled": True,
-       "name": username,
-       "password": password
-       }
-    }
-    h = httplib2.Http(".cache")
-    resp, content = h.request("%s/users"
-                              % cfg.CONF.auth_url, "POST",
-                              body=jsonutils.dumps(post_data),
-                              headers={'content-type': 'application/json',
-                              'X-Auth-Token': token})
-    return resp, content
-
-
-def authority(token):
-    h = httplib2.Http(".cache")
-    resp, content = h.request("%s/projects/%s/users/%s/roles/%s"
-            % (CONF.auth_url, CONF.admin_tenant_id,
-                CONF.admin_user_id, CONF.admin_role_id),
-            "PUT", headers={'X-Auth-Token': token})
-    return resp, content
-
-
-def get_token():
-    post_data = {
-      "auth": {
-        "identity": {
-            "methods": [
-                "password"
-            ],
-            "password": {
-                "user": {
-                    "id": cfg.CONF.admin_user_id,
-                    "password": cfg.CONF.admin_password
-                }
-            }
-         },
-         "scope": {
-            "project": {
-              "id": cfg.CONF.admin_tenant_id
-            }
-         }
-       }
-    }
-    h = httplib2.Http(".cache")
-    resp, content = h.request("%s/auth/tokens"
-                              % cfg.CONF.auth_url, "POST",
-                              body=jsonutils.dumps(post_data),
-                              headers={'content-type': 'application/json'})
-
-    token = resp['x-subject-token']
-    return token
+    result = keystone_client.roles.grant(role, user=user, project=project)
+    return result
