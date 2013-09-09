@@ -6,6 +6,10 @@ foreman_address=http://192.168.10.11:3000
 foreman_proxy_address=http://192.168.10.11:8443
 rule_begin="count=20;master=1;compute=max"
 rule_increase="count=10;master=1;compute=max"
+admin_tenant_id=14f905713c30496d8d14ddf153216a68
+admin_user_id=c4b6e154c1964313950e850af98689f2
+admin_role_id=f8a4a80076f749d9b30790999ebe937d
+
 
 [database]
 #connection=sqlite:////opt/db/mimic.sqlite

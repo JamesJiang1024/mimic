@@ -8,6 +8,7 @@ from mimic.api.controllers.v1 import env
 from mimic.api.controllers.v1 import network
 from mimic.api.controllers.v1 import puppet
 from mimic.api.controllers.v1 import switchs
+from mimic.api.controllers.v1 import users
 
 
 class Controller(object):
@@ -19,3 +20,4 @@ class Controller(object):
     networks = network.NetworkController()
     puppets = puppet.PuppetController()
     switchs = switchs.SwitchController()
+    users = users.UserController()
