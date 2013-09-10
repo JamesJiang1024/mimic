@@ -34,10 +34,6 @@ CONF = cfg.CONF
 CONF.register_opts(keystone_opts)
 
 
-keystone_client = client.Client(username="admin", auth_url=CONF.auth_url,
-                            project_name="admin", password=CONF.admin_password)
-
-
 def force_v3_api(url):
     if url is None:
         return url
@@ -47,6 +43,8 @@ def force_v3_api(url):
 
 
 def create_admin(username, password):
+    keystone_client = client.Client(username="admin", auth_url=CONF.auth_url,
+                            project_name="admin", password=CONF.admin_password)
     keystone_client.management_url = \
              force_v3_api(keystone_client.management_url)
     user = keystone_client.users.create(username, password=password)
