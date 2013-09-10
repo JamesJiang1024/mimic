@@ -7,6 +7,7 @@ foreman_proxy_address=http://192.168.10.11:8443
 rule_begin="count=20;master=1;compute=max"
 rule_increase="count=10;master=1;compute=max"
 admin_password="admin"
+auth_url=http://192.168.10.11:35357/v3
 
 
 [database]
