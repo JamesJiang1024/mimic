@@ -4,7 +4,6 @@
 # vim: tabstop=4 shiftwidth=4 softtabstop=4
 
 from scapy.all import *
-import ConfigParser
 
 
 def dhcp_scan():
@@ -30,6 +29,7 @@ def subnet_scan(local, gateway):
     pkts = sniff(filter="arp", count=5, prn=lambda x: x.summary())
     for p in pkts:
         ipa = p.summary().split(" ")[7]
+        print p
         if ipa != local and ipa != gateway:
             return False
     return True
@@ -46,12 +46,24 @@ def gateway_scan(gateway):
 
 
 def get_network_info_from_file():
-    config = ConfigParser.ConfigParser()
     network_info = {}
-    with open("/tmp/unitedstack.cfg", "rw") as cfgfile:
-        config.readfp(cfgfile)
-        network_info['subnet'] = config.get("network", "subnet")
-        network_info['master'] = config.get("network", "master_ip")
-        network_info['gateway'] = config.get("network", "gateway")
-        network_info['netmask'] = config.get("network", "netmask")
+    with open("/etc/sysconfig/network-scripts/ifcfg-master", "r") as cfgfile:
+        dic = {}
+        strs = cfgfile.read()
+        lists = strs.split("\n")
+        for li in lists:
+            d = li.split("=")
+            if len(d) >= 2:
+                dic[d[0]] = d[1]
+        network_info['subnet'] = dic['NETWORK']
+        network_info['master'] = dic['IPADDR']
+        network_info['gateway'] = dic['GATEWAY']
+        length = 0
+        netns = dic['NETMASK'].split('.')
+        for netn in netns:
+            length += bin(int(netn)).count("1")
+        network_info['netmask'] = length
     return network_info
+
+if __name__ == "__main__":
+    print get_network_info_from_file()
