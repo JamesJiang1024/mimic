@@ -16,5 +16,6 @@ class PuppetController(rest.RestController):
                                 "awk '/inet addr:/{ print $2 }' "
                                 "| awk -F: '{print $2 }'")
         data = manager.build_host_data(mac, "no", ip)
-        result1, result2 = commands.getstatusoutput('puppet agent -vt')
+        result1, result2 = commands.\
+                getstatusoutput('puppet agent -vt >> /tmp/master_puppet.log')
         return data
