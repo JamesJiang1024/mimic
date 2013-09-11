@@ -43,7 +43,7 @@ class NetworkController(rest.RestController):
             "subnet": None,
             "netmask": None,
             "gateway": None,
-            "master_ip": None
+            "master": None
         }
         for network in networklist:
             value = dbapi.find_lookup_value_by_match("env=%s" % network)
@@ -64,15 +64,15 @@ class NetworkController(rest.RestController):
         dbapi = api.get_instance()
         try:
             gateway = dbapi.find_lookup_value_by_match("env=gateway")[0].value
-            master_ip = dbapi.\
-                    find_lookup_value_by_match("env=master_ip")[0].value
+            master = dbapi.\
+                    find_lookup_value_by_match("env=master")[0].value
         except:
             return {
-                "error": "system error with no master_ip and gateway"
+                "error": "system error with no master and gateway"
             }
         dhcp_status = network_scan.dhcp_scan()
         gateway_status = network_scan.gateway_scan(gateway)
-        #subnet_status = network_scan.subnet_scan(gateway, master_ip)
+        #subnet_status = network_scan.subnet_scan(gateway, master)
         subnet_status = True
         result = {
             "dhcp_status": dhcp_status,
@@ -98,6 +98,6 @@ class NetworkController(rest.RestController):
         result = dbapi.find_lookup_value_by_match("env=%s" % key)
         if len(result) > 0:
             dbapi.update_lookup_value(result[0].id, lookup_values)
-
-        dbapi.create_lookup_value(lookup_values)
+        else:
+            dbapi.create_lookup_value(lookup_values)
         return lookup_values
