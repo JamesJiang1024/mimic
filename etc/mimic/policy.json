@@ -31,7 +31,7 @@
    },
    "us_foreman_url":{
        "driver": "enable_driver",
-       "format": "us1.ustack.in",
+       "format": "http://us1.ustack.in",
        "role": "master",
        "class": "sunfire::masternode"
    },
