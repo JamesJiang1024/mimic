@@ -5,17 +5,17 @@ from mimic.engine import manager
 
 
 puppet_status = [
-    {'begin': False},
-    {'nova-api': False},
-    {'nova-scheduler': False},
-    {'nova-conductor': False},
-    {'nova-compute': False},
-    {'ceilometer-api': False},
-    {'ustack-mimic-api': False},
-    {'ustack-placebo': False},
-    {'messagebus': False},
-    {'libvirt': False},
-    {'finished': False}
+    {'service': 'begin', 'status': False},
+    {'service': 'nova-api', 'status': False},
+    {'service': 'nova-scheduler', 'status': False},
+    {'service': 'nova-conductor', 'status': False},
+    {'service': 'nova-compute', 'status': False},
+    {'service': 'ceilometer-api', 'status': False},
+    {'service': 'ustack-mimic-api', 'status': False},
+    {'service': 'ustack-placebo', 'status': False},
+    {'service': 'messagebus', 'status': False},
+    {'service': 'libvirt', 'status': False},
+    {'service': 'finished', 'status': False}
  ]
 
 
@@ -42,6 +42,6 @@ class PuppetController(rest.RestController):
     @wsme_pecan.wsexpose(unicode, unicode, body=unicode)
     def put(self, content):
         for puppet_s in puppet_status:
-            if content['service'] in puppet_s:
-                puppet_s[content['service']] = True
+            if puppet_s['service'] == content['service']:
+                puppet_s['status'] = True
         return puppet_status
