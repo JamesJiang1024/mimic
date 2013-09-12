@@ -30,7 +30,7 @@ class PuppetController(rest.RestController):
                 getstatusoutput("ifconfig master | "
                                 "awk '/inet addr:/{ print $2 }' "
                                 "| awk -F: '{print $2 }'")
-        data = manager.build_host_data(mac, "no", ip)
+        data = manager.build_host_data(mac, "no", ip, build=False)
         return data
 
     @wsme_pecan.wsexpose(unicode)

@@ -17,7 +17,7 @@ CONF.register_opts(policy_opts)
 LOG = logging.getLogger(__name__)
 
 
-def build_host_data(mac, local, ip):
+def build_host_data(mac, local, ip, build=True):
     hosts_num = foreman_helper.hosts() or {}
     if not ip:
         ipaddr = foreman_helper.unused_ip(mac)
@@ -27,7 +27,7 @@ def build_host_data(mac, local, ip):
         'name': "us" + str(len(hosts_num) + 1),
         'ip': ipaddr,
         'mac': mac,
-        'build': True
+        'build': build
     }
     hg = foreman_helper.host_groups()
     role = "master"
