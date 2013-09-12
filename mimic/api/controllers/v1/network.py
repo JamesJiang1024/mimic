@@ -2,8 +2,12 @@ import commands
 from pecan import rest
 from mimic.db import api
 from mimic.engine import foreman_helper
+from mimic.openstack.common import log as logging
 from mimic.engine import network_scanning as network_scan
 from mimic.common.wsmeext import pecan as wsme_pecan
+
+
+LOG = logging.getLogger(__name__)
 
 
 class NetworkController(rest.RestController):
@@ -70,9 +74,13 @@ class NetworkController(rest.RestController):
             return {
                 "error": "system error with no master and gateway"
             }
+        LOG.info("Begin to scanning network")
         dhcp_status = network_scan.dhcp_scan()
+        LOG.info("Scanning DHCP")
         gateway_status = network_scan.gateway_scan(gateway)
+        LOG.info("Scanning Gateway")
         #subnet_status = network_scan.subnet_scan(gateway, master)
+        LOG.info("Scanning Subnet")
         subnet_status = True
         result = {
             "dhcp_status": dhcp_status,

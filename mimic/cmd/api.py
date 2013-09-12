@@ -5,11 +5,13 @@
 
 """The Example Service API."""
 
+import eventlet
+eventlet.monkey_patch()
+
 import logging
 import sys
-
 from oslo.config import cfg
-from wsgiref import simple_server
+from eventlet import wsgi
 
 from mimic.api import app
 from mimic.common import service as mimic_service
@@ -25,16 +27,8 @@ def main():
     # Build and start the WSGI app
     host = CONF.mimic_api_bind_ip
     port = CONF.mimic_api_port
-    wsgi = simple_server.make_server(host,
-                                     port,
-                                     app.VersionSelectorApplication())
-
     LOG = log.getLogger(__name__)
     LOG.info("Serving on http://%s:%s" % (host, port))
     LOG.info("Configuration:")
     CONF.log_opt_values(LOG, logging.INFO)
-
-    try:
-        wsgi.serve_forever()
-    except KeyboardInterrupt:
-        pass
+    wsgi.server(eventlet.listen((host, port)), app.VersionSelectorApplication())
