@@ -1,5 +1,5 @@
 [DEFAULT]
-debug=True
+debug=False
 verbose = True
 mimic_api_port=9100
 foreman_address=http://192.168.10.11:3000
