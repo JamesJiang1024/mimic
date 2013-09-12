@@ -94,11 +94,5 @@
        "format": "us1.ustack.in",
        "role": "compute",
        "class": "sunfire::compute"
-   },
-  "us_dhcp_nameservers":{
-       "driver": "enable_driver",
-       "format": "192.168.10.1",
-       "role": "master",
-       "class": "sunfire::compute"
    }
 }
