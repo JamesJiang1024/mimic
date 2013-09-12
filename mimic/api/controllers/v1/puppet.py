@@ -5,17 +5,17 @@ from mimic.engine import manager
 
 
 puppet_status = [
-    {'service': 'begin', 'status': False},
-    {'service': 'nova-api', 'status': False},
-    {'service': 'nova-scheduler', 'status': False},
-    {'service': 'nova-conductor', 'status': False},
-    {'service': 'nova-compute', 'status': False},
-    {'service': 'ceilometer-api', 'status': False},
-    {'service': 'ustack-mimic-api', 'status': False},
-    {'service': 'ustack-placebo', 'status': False},
-    {'service': 'messagebus', 'status': False},
-    {'service': 'libvirt', 'status': False},
-    {'service': 'finished', 'status': False}
+    {'service': 'begin', 'status': True},
+    {'service': 'nova-api', 'status': True},
+    {'service': 'nova-scheduler', 'status': True},
+    {'service': 'nova-conductor', 'status': True},
+    {'service': 'nova-compute', 'status': True},
+    {'service': 'ceilometer-api', 'status': True},
+    {'service': 'ustack-mimic-api', 'status': True},
+    {'service': 'ustack-placebo', 'status': True},
+    {'service': 'messagebus', 'status': True},
+    {'service': 'libvirt', 'status': True},
+    {'service': 'finished', 'status': True}
  ]
 
 
@@ -31,8 +31,6 @@ class PuppetController(rest.RestController):
                                 "awk '/inet addr:/{ print $2 }' "
                                 "| awk -F: '{print $2 }'")
         data = manager.build_host_data(mac, "no", ip)
-        result1, result2 = commands.\
-                getstatusoutput('puppet agent -vt >> /tmp/master_puppet.log')
         return data
 
     @wsme_pecan.wsexpose(unicode)
