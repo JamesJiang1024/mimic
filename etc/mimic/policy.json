@@ -77,6 +77,12 @@
        "role": "master",
        "class": "sunfire::masternode"
    },
+  "us_fixed_range":{
+       "driver": "env_driver",
+       "format": "env=fixed_range",
+       "role": "master",
+       "class": "sunfire::masternode"
+   },
   "db_host":{
        "driver": "enable_driver",
        "format": "us1.ustack.in",

@@ -9,4 +9,3 @@ mox==0.5.3
 python-subunit
 testrepository>=0.0.13
 testtools>=0.9.27
-oslo.config

@@ -20,11 +20,14 @@ class NetworkController(rest.RestController):
         """
         dhcp_range = content['dhcp_range']
         subnet = content['subnet']
+        fixed_range = content['fixed_range']
         self._update_env_key_value("dhcp_range", dhcp_range)
         self._update_env_key_value("subnet", subnet)
+        self._update_env_key_value("fixed_range", fixed_range)
         result = {
             "dhcp_range": dhcp_range,
-            "subnet": subnet
+            "subnet": subnet,
+            "fixed_range": fixed_range
         }
         foreman_helper.build_pxe_default()
         return result
