@@ -9,3 +9,7 @@ build
 dist
 .testrepository/
 *.cache
+*.swp
+AUTHOR
+ChangeLog
+mimic.conf
