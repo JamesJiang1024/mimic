@@ -83,6 +83,12 @@
        "role": "master",
        "class": "sunfire::masternode"
    },
+  "us_dhcp_nameservers":{
+       "driver": "enable_driver",
+       "format": "192.168.10.1",
+       "role": "master",
+       "class": "sunfire::masternode"
+   },
   "db_host":{
        "driver": "enable_driver",
        "format": "us1.ustack.in",

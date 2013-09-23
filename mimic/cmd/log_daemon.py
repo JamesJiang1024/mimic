@@ -24,6 +24,7 @@ Run logger listener
 import json
 import tailer
 import httplib2
+import commands
 
 
 def send_status(service):
@@ -49,6 +50,7 @@ def main():
             'messagebus',
             'libvirt'
            ]
+    commands.getstatusoutput("touch /tmp/master_puppet.log")
     for line in tailer.follow(open('/tmp/master_puppet.log')):
         if 'Applying configuration' in line:
             send_status("begin")
