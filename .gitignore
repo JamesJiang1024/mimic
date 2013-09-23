@@ -10,6 +10,6 @@ dist
 .testrepository/
 *.cache
 *.swp
-AUTHOR
+AUTHORS
 ChangeLog
 mimic.conf
