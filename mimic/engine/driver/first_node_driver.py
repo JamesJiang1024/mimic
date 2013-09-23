@@ -28,9 +28,9 @@ class FirstNodeDriver(base.BaseSmartParameter):
 
     def action(self, count, hostname, **kwargs):
         if count == 1:
-            value = True
+            value = "--- true"
         else:
-            value = False
+            value = "--- false"
 
         lookup_values = {
             "match": "fqdn=%s.ustack.in" % hostname,

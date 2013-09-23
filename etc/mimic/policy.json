@@ -1,7 +1,7 @@
 {
    "us_enable_openstack":{
        "driver": "enable_driver",
-       "format": true,
+       "format": "--- true",
        "role": "master",
        "class": "sunfire::masternode"
    },
