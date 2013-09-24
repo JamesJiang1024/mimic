@@ -8,8 +8,21 @@ rule_begin="count=20;master=1;compute=max"
 rule_increase="count=10;master=1;compute=max"
 admin_password="admin"
 auth_url=http://192.168.10.11:35357/v3
+memcached_servers = 127.0.0.1:11211
 
 
 [database]
 #connection=sqlite:////opt/db/mimic.sqlite
 connection = mysql://root:root@192.168.10.11/foreman
+
+[AUTH]
+auth_host = 127.0.0.1
+auth_port = 35357
+auth_protocol = http
+auth_api_version = v3
+
+admin_user_domain_name = Default
+admin_username =
+admin_password =
+admin_project_name = service
+admin_project_domain_name = Default
