@@ -3,7 +3,7 @@ import urllib2
 from mimic.api import app
 
 
-def designate_client():
+class Client(object):
     pass
 
 
