@@ -83,6 +83,12 @@
        "role": "master",
        "class": "sunfire::masternode"
    },
+  "us_fixed_range":{
+       "driver": "cidr_driver",
+       "format": "subnet/netmask", 
+       "role": "master",
+       "class": "sunfire::masternode"
+   },
   "db_host":{
        "driver": "enable_driver",
        "format": "us1.ustack.in",
