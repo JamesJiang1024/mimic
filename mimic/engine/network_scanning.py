@@ -37,6 +37,7 @@ def subnet_scan(local, gateway):
 
 
 def gateway_scan(gateway):
+    return True
     ip, unans = sr(IP(dst=gateway, proto=(0, 255)) / "SCAPY", timeout=0.1)
     arp, unans = srp(Ether(dst="ff:ff:ff:ff:ff:ff") / ARP(pdst=gateway),
                      timeout=2)
