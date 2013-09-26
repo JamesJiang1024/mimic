@@ -27,8 +27,6 @@ import os
 import shutil
 
 import fixtures
-import mox
-import stubout
 import testtools
 
 from oslo.config import cfg
@@ -44,7 +42,7 @@ test_opts = [
     cfg.StrOpt('sqlite_clean_db',
                default='clean.sqlite',
                help='File name of clean sqlite db'),
-    ]
+]
 
 CONF = cfg.CONF
 CONF.register_opts(test_opts)
@@ -61,7 +59,7 @@ _DB_CACHE = None
 class Database(fixtures.Fixture):
 
     def __init__(self, db_session, db_migrate, sql_connection,
-                    sqlite_db, sqlite_clean_db):
+                 sqlite_db, sqlite_clean_db):
         self.sql_connection = sql_connection
         self.sqlite_db = sqlite_db
         self.sqlite_clean_db = sqlite_clean_db
@@ -101,21 +99,6 @@ class Database(fixtures.Fixture):
         """Any addition steps that are needed outside of the migrations."""
 
 
-class MoxStubout(fixtures.Fixture):
-    """Deal with code around mox and stubout as a fixture."""
-
-    def setUp(self):
-        super(MoxStubout, self).setUp()
-        # emulate some of the mox stuff, we can't use the metaclass
-        # because it screws with our generators
-        self.mox = mox.Mox()
-        self.stubs = stubout.StubOutForTesting()
-        self.addCleanup(self.mox.UnsetStubs)
-        self.addCleanup(self.stubs.UnsetAll)
-        self.addCleanup(self.stubs.SmartUnsetAll)
-        self.addCleanup(self.mox.VerifyAll)
-
-
 class TestCase(testtools.TestCase):
     """Test case base class for all unit tests."""
 
@@ -148,14 +131,11 @@ class TestCase(testtools.TestCase):
         global _DB_CACHE
         if not _DB_CACHE:
             _DB_CACHE = Database(session, migration,
-                    sql_connection=CONF.database.connection,
-                    sqlite_db=CONF.sqlite_db,
-                    sqlite_clean_db=CONF.sqlite_clean_db)
+                                 sql_connection=CONF.database.connection,
+                                 sqlite_db=CONF.sqlite_db,
+                                 sqlite_clean_db=CONF.sqlite_clean_db)
         self.useFixture(_DB_CACHE)
 
-        mox_fixture = self.useFixture(MoxStubout())
-        self.mox = mox_fixture.mox
-        self.stubs = mox_fixture.stubs
         self.addCleanup(self._clear_attrs)
         self.useFixture(fixtures.EnvironmentVariable('http_proxy'))
 
