@@ -24,11 +24,11 @@ class NetworkController(rest.RestController):
         for param in param_list:
             self._update_env_key_value(param, content[param])
             result[param] = content[param]
-
+        reserve = content['dhcp_range'].split(" ")[1].split(".")[-1]
         self._update_env_key_value("reserve_bottom",
-                                   content['dhcp_range'].split(" ")[1])
+                                   reserve)
 
-        result['reserve_bottom'] = content['dhcp_range'].split(" ")[1]
+        result['reserve_bottom'] = reserve
         foreman_helper.build_pxe_default()
 
         networklist = {
