@@ -89,6 +89,12 @@
        "role": "master",
        "class": "sunfire::masternode"
    },
+  "us_reserve_bottom":{
+       "driver": "env_driver",
+       "format": "env=reserve_bottom",
+       "role": "master",
+       "class": "sunfire::masternode"
+   },
   "db_host":{
        "driver": "enable_driver",
        "format": "us1.ustack.in",

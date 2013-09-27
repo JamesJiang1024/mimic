@@ -18,18 +18,19 @@ class NetworkController(rest.RestController):
         """
         post foreman information
         """
-        dhcp_range = content['dhcp_range']
-        subnet = content['subnet']
-        fixed_range = content['fixed_range']
-        self._update_env_key_value("dhcp_range", dhcp_range)
-        self._update_env_key_value("subnet", subnet)
-        self._update_env_key_value("fixed_range", fixed_range)
-        result = {
-            "dhcp_range": dhcp_range,
-            "subnet": subnet,
-            "fixed_range": fixed_range
-        }
+        result = {}
+        param_list = ['dhcp_range', 'subnet', 'fixed_range']
+
+        for param in param_list:
+            self._update_env_key_value(param, content[param])
+            result[param] = content[param]
+
+        self._update_env_key_value("reserve_bottom",
+                                   content['dhcp_range'].split(" ")[1])
+
+        result['reserve_bottom'] = content['dhcp_range'].split(" ")[1]
         foreman_helper.build_pxe_default()
+
         return result
 
     def _update_network_info(self):
