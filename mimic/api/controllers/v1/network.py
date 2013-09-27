@@ -31,21 +31,6 @@ class NetworkController(rest.RestController):
         result['reserve_bottom'] = content['dhcp_range'].split(" ")[1]
         foreman_helper.build_pxe_default()
 
-        return result
-
-    def _update_network_info(self):
-        network_info = network_scan.get_network_info_from_file()
-        for ni in network_info:
-            self._update_env_key_value(ni, network_info[ni])
-
-    @wsme_pecan.wsexpose(unicode)
-    def get(self):
-        """
-        get global infomation of unitedstack os from foreman db
-
-        """
-        self._update_network_info()
-        dbapi = api.get_instance()
         networklist = {
             "dhcp_range": None,
             "subnet": None,
@@ -54,6 +39,21 @@ class NetworkController(rest.RestController):
             "master": None,
             "fixed_range": None
         }
+        networklist = self.get_network_info(networklist)
+        foreman_helper.update_subnet(networklist['fixed_range'],
+                                     networklist['gateway'],
+                                     content['dhcp_range'],
+                                     networklist['master'])
+
+        return result
+
+    def _update_network_info(self):
+        network_info = network_scan.get_network_info_from_file()
+        for ni in network_info:
+            self._update_env_key_value(ni, network_info[ni])
+
+    def get_network_info(self, networklist):
+        dbapi = api.get_instance()
         for network in networklist:
             value = dbapi.find_lookup_value_by_match("env=%s" % network)
             if len(value) > 0:
@@ -61,12 +61,23 @@ class NetworkController(rest.RestController):
                     networklist[network] = value[0].value
                 else:
                     networklist[network] = int(value[0].value)
-
-        foreman_helper.update_subnet(networklist['fixed_range'],
-                                     networklist['gateway'],
-                                     networklist['dhcp_range'],
-                                     networklist['master'])
         return networklist
+
+    @wsme_pecan.wsexpose(unicode)
+    def get(self):
+        """
+        get global infomation of unitedstack os from foreman db
+
+        """
+        self._update_network_info()
+        networklist = {
+            "dhcp_range": None,
+            "subnet": None,
+            "netmask": None,
+            "gateway": None,
+            "master": None
+        }
+        return self.get_network_info(networklist)
 
     @wsme_pecan.wsexpose(unicode, unicode)
     def get_one(self, status):
