@@ -51,7 +51,8 @@ class NetworkController(rest.RestController):
             "subnet": None,
             "netmask": None,
             "gateway": None,
-            "master": None
+            "master": None,
+            "fixed_range": None
         }
         for network in networklist:
             value = dbapi.find_lookup_value_by_match("env=%s" % network)
@@ -60,6 +61,11 @@ class NetworkController(rest.RestController):
                     networklist[network] = value[0].value
                 else:
                     networklist[network] = int(value[0].value)
+
+        foreman_helper.update_subnet(networklist['fixed_range'],
+                                     networklist['gateway'],
+                                     networklist['dhcp_range'],
+                                     networklist['master'])
         return networklist
 
     @wsme_pecan.wsexpose(unicode, unicode)

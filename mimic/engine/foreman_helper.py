@@ -1,6 +1,7 @@
 import json
 import logging
 import httplib2
+import netaddr
 from oslo.config import cfg
 
 from mimic.db import api
@@ -76,4 +77,29 @@ def create_host(host_info):
     resp, content = h.request("%s/api/hosts" % cfg.CONF.foreman_address,
             "POST", body=json.dumps(data),
             headers={'content-type': 'application/json'})
+    return content
+
+
+def update_subnet(net, gate, dhcp_range, master):
+    ip = netaddr.IPNetwork(net)
+    dhcp_from = dhcp_range.split(" ")[0]
+    dhcp_to = dhcp_range.split(" ")[1]
+    subnet = {
+        "subnet": {
+           "network": str(ip.network),
+           "mask": str(ip.netmask),
+           "gateway": gate,
+           "from": dhcp_from,
+           "to": dhcp_to,
+           "dns_primary": master
+        }
+    }
+    h = httplib2.Http(".cache")
+    LOG.info("Update Subnet: %s" % subnet)
+    resp, content = h.request("%s/api/subnets/2" %
+                              cfg.CONF.foreman_address,
+                              "PUT",
+                              body=json.dumps(subnet),
+                              headers={'content-type': 'application/json'})
+    LOG.info("Update Result: %s" % content)
     return content
