@@ -13,61 +13,55 @@
    },
    "us_db_host":{
        "driver": "enable_driver",
-       "format": "us1.ustack.in",
+       "format": "master.ustack.in",
        "role": "master",
        "class": "sunfire::masternode"
    },
    "us_mirror_url":{
        "driver": "enable_driver",
-       "format": "us1.ustack.in",
+       "format": "master.ustack.in",
        "role": "master",
        "class": "sunfire::masternode"
    },
    "us_dns_server":{
        "driver": "enable_driver",
-       "format": "us1.ustack.in",
-       "role": "master",
-       "class": "sunfire::masternode"
-   },
-   "us_foreman_url":{
-       "driver": "enable_driver",
-       "format": "http://us1.ustack.in",
+       "format": "master.ustack.in",
        "role": "master",
        "class": "sunfire::masternode"
    },
   "us_puppetmaster_url":{
        "driver": "enable_driver",
-       "format": "us1.ustack.in",
+       "format": "master.ustack.in",
        "role": "master",
        "class": "sunfire::masternode"
    },
   "us_public_address":{
        "driver": "enable_driver",
-       "format": "us1.ustack.in",
+       "format": "master.ustack.in",
        "role": "master",
        "class": "sunfire::masternode"
    },
   "us_rabbit_host":{
        "driver": "enable_driver",
-       "format": "us1.ustack.in",
+       "format": "master.ustack.in",
        "role": "master",
        "class": "sunfire::masternode"
    },
   "us_keystone_host":{
        "driver": "enable_driver",
-       "format": "us1.ustack.in",
+       "format": "master.ustack.in",
        "role": "master",
        "class": "sunfire::masternode"
    },
   "us_glance_host":{
        "driver": "enable_driver",
-       "format": "us1.ustack.in",
+       "format": "master.ustack.in",
        "role": "master",
        "class": "sunfire::masternode"
    },
   "us_vncproxy_host":{
        "driver": "enable_driver",
-       "format": "us1.ustack.in",
+       "format": "master.ustack.in",
        "role": "master",
        "class": "sunfire::masternode"
    },
@@ -91,19 +85,19 @@
    },
   "db_host":{
        "driver": "enable_driver",
-       "format": "us1.ustack.in",
+       "format": "master.ustack.in",
        "role": "compute",
        "class": "sunfire::compute"
    },
   "rabbit_host":{
        "driver": "enable_driver",
-       "format": "us1.ustack.in",
+       "format": "master.ustack.in",
        "role": "compute",
        "class": "sunfire::compute"
    },
   "vncproxy_host":{
        "driver": "enable_driver",
-       "format": "us1.ustack.in",
+       "format": "master.ustack.in",
        "role": "compute",
        "class": "sunfire::compute"
    }
