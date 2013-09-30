@@ -23,8 +23,14 @@ def build_host_data(mac, local, ip, build=True):
         ipaddr = foreman_helper.unused_ip(mac)
     else:
         ipaddr = ip
+
+    if len(hosts_num) == 0:
+        hostname = "master"
+    else:
+        hostname = "us" + str(len(hosts_num) + 1)
+
     host_info = {
-        'name': "us" + str(len(hosts_num) + 1),
+        'name': hostname,
         'ip': ipaddr,
         'mac': mac,
         'build': build
