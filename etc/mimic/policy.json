@@ -77,12 +77,6 @@
        "role": "master",
        "class": "sunfire::masternode"
    },
-  "us_dhcp_nameservers":{
-       "driver": "enable_driver",
-       "format": "192.168.10.1",
-       "role": "master",
-       "class": "sunfire::masternode"
-   },
   "us_fixed_range":{
        "driver": "cidr_driver",
        "format": "subnet/netmask",

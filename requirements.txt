@@ -17,3 +17,4 @@ httplib2
 six<1.4
 scapy-real
 tailer
+python-memcached
