@@ -1,5 +1,5 @@
 import commands
-import os
+import subprocess
 from pecan import rest
 from mimic.common.wsmeext import pecan as wsme_pecan
 from mimic.engine import manager
@@ -31,13 +31,9 @@ class PuppetController(rest.RestController):
                                 "awk '/inet addr:/{ print $2 }' "
                                 "| awk -F: '{print $2 }'")
         data = manager.build_host_data(mac, "no", ip, build=False)
-        child_pid = os.fork()
-        if child_pid == 0:
-            result1, result2 = commands.\
-                  getstatusoutput('puppet agent -vt >> /tmp/master_puppet.log')
-            return data
-        else:
-            return data
+        subprocess.Popen("puppet agent -vt >> /tmp/master_puppet.log",
+                         shell=True)
+        return data
 
     @wsme_pecan.wsexpose(unicode)
     def get_all(self):
