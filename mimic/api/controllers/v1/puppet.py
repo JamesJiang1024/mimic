@@ -12,7 +12,6 @@ puppet_status = [
     {'service': 'nova-conductor', 'status': False},
     {'service': 'nova-compute', 'status': False},
     {'service': 'ceilometer-api', 'status': False},
-    {'service': 'ustack-mimic-api', 'status': False},
     {'service': 'messagebus', 'status': False},
     {'service': 'libvirt', 'status': False},
     {'service': 'finished', 'status': False}
