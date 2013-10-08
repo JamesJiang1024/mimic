@@ -48,7 +48,7 @@ def build_host_data(mac, local, ip, build=True):
     drivers = _load_drivers()
     host_info['hostgroup_id'] = hostgroup_id
     for driver in drivers:
-        if role == driver.role:
+        if role in driver.role:
             driver.action(len(hosts_num) + 1, host_info['name'], ip=ipaddr)
     LOG.info("Server To Post: %s" % host_info)
     return jsonutils.loads(foreman_helper.create_host(host_info))

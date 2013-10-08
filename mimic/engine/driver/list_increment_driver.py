@@ -28,30 +28,43 @@ class ListIncrementDriver(base.BaseSmartParameter):
         base.BaseSmartParameter.__init__(self, name, format, classes, role)
 
     def action(self, count, hostname, **kwargs):
+        # get action informations
         ip = kwargs['ip']
-        master_id = foreman_helper.host_groups()['master']
         hosts = foreman_helper.hosts()
+
+        # init parameters
         result = ""
         selected_lookup = []
+
+        # get value of lookup_keys and lookup_key_ids
         for host in hosts:
-            if host['host']['hostgroup_id'] == master_id:
-                hn = host['host']['name']
-                lv = self.dbapi.\
-                        find_lookup_value_by_id_match("fqdn=%s" % hn,
-                                                          self.key)[0]
-                selected_lookup.append(lv.id)
-                result = lv.value
-        form = self.format.replace("ipaddr", ip)
+            hn = host['host']['name']
+            lv = self.dbapi.\
+                   find_lookup_value_by_id_match("fqdn=%s" % hn, self.key)[0]
+            selected_lookup.append(lv.id)
+            result = lv.value
+
+        # fromat judgeing
+        format_types = {"ipaddr": ip, "hostname": hostname}
+        for format_type in format_types:
+            if format_type in self.format:
+                form = self.format.replace(format_type,
+                        format_types[format_type])
+
         if result == "":
             result = "---"
             result += " \n - %s" % form
         else:
             result += " \n - %s" % form
+
+        # append new ip format to old lookup_values
         for selected_lu in selected_lookup:
             lookup_values = {
                 "value": str(result),
             }
             self.dbapi.update_lookup_value(selected_lu, lookup_values)
+
+        # create a new lookup_values
         lookup_values = {
             "match": "fqdn=%s.ustack.in" % hostname,
             "value": str(result),

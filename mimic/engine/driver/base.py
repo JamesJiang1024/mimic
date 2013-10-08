@@ -43,7 +43,9 @@ class BaseSmartParameter(object):
         self._get_lookup_key_id()
 
     def _get_lookup_key_id(self):
-        keys = self.dbapi.get_lookup_key(self.name, self.classes)
+        keys = []
+        for classe in self.classes:
+            keys = keys + self.dbapi.get_lookup_key(self.name, classe)
         if len(keys) > 0:
             self.key = keys[0]
 
