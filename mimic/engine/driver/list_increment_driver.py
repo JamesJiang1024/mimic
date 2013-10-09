@@ -41,14 +41,15 @@ class ListIncrementDriver(base.BaseSmartParameter):
         # get value of lookup_keys and lookup_key_ids
         for host in hosts:
             hn = host['host']['name']
-            lv = self.dbapi.find_lookup_value_by_id_match("fqdn=%s" % hn, self.key)[0]
+            lv = self.dbapi.find_lookup_value_by_id_match("fqdn=%s" % hn, self.key)
+            if len(lv) > 0:
+                selected_lookup.append(lv[0].id)
+                result = lv[0].value
             if self.assistant_key:
                 lv2 = self.dbapi.find_lookup_value_by_id_match("fqdn=%s" % hn, self.assistant_key)
                 if len(lv2) > 0:
                     selected_lookup.append(lv2[0].id)
-            selected_lookup.append(lv.id)
-            result = lv.value
-
+                    result = lv2[0].value
         # fromat judgeing
         format_types = {"ipaddr": ip, "hostname": hostname}
         for format_type in format_types:
