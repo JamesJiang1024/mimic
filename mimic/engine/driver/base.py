@@ -44,10 +44,13 @@ class BaseSmartParameter(object):
 
     def _get_lookup_key_id(self):
         keys = []
+        self.assistant_key = None
         for classe in self.classes:
             keys = keys + self.dbapi.get_lookup_key(self.name, classe)
         if len(keys) > 0:
             self.key = keys[0]
+        if len(keys) > 1:
+            self.assistant_key = keys[1]
 
     @abc.abstractmethod
     def action(self, count, hostname, **kwargs):

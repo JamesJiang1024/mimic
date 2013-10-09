@@ -28,8 +28,10 @@ class ListIncrementDriver(base.BaseSmartParameter):
         base.BaseSmartParameter.__init__(self, name, format, classes, role)
 
     def action(self, count, hostname, **kwargs):
+
         # get action informations
         ip = kwargs['ip']
+        post_role = kwargs['role']
         hosts = foreman_helper.hosts()
 
         # init parameters
@@ -39,8 +41,11 @@ class ListIncrementDriver(base.BaseSmartParameter):
         # get value of lookup_keys and lookup_key_ids
         for host in hosts:
             hn = host['host']['name']
-            lv = self.dbapi.\
-                   find_lookup_value_by_id_match("fqdn=%s" % hn, self.key)[0]
+            lv = self.dbapi.find_lookup_value_by_id_match("fqdn=%s" % hn, self.key)[0]
+            if self.assistant_key:
+                lv2 = self.dbapi.find_lookup_value_by_id_match("fqdn=%s" % hn, self.assistant_key)
+                if len(lv2) > 0:
+                    selected_lookup.append(lv2[0].id)
             selected_lookup.append(lv.id)
             result = lv.value
 
@@ -52,10 +57,9 @@ class ListIncrementDriver(base.BaseSmartParameter):
                         format_types[format_type])
 
         if result == "":
-            result = "---"
-            result += " \n - %s" % form
+            result += "%s" % form
         else:
-            result += " \n - %s" % form
+            result += ",%s" % form
 
         # append new ip format to old lookup_values
         for selected_lu in selected_lookup:
@@ -65,10 +69,15 @@ class ListIncrementDriver(base.BaseSmartParameter):
             self.dbapi.update_lookup_value(selected_lu, lookup_values)
 
         # create a new lookup_values
+        if post_role == 2:
+            result_key = self.assistant_key
+        else:
+            result_key = self.key
+
         lookup_values = {
             "match": "fqdn=%s.ustack.in" % hostname,
             "value": str(result),
-            "lookup_key_id": self.key
+            "lookup_key_id": result_key
         }
         self.dbapi.create_lookup_value(lookup_values)
 
