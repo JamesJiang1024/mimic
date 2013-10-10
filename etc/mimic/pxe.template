@@ -1,5 +1,6 @@
 default linux
 label linux
 kernel boot/UnitedStackOS-6.2-x86_64-vmlinuz
+IPAPPEND 2
 append initrd=boot/UnitedStackOS-6.2-x86_64-initrd.img ks=http://master.ustack.in/media/ks.cfg ksdevice=bootif network kssendmac
 
