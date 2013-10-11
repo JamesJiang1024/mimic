@@ -24,9 +24,9 @@ class PuppetController(rest.RestController):
     @wsme_pecan.wsexpose(unicode, unicode, body=unicode)
     def post(self, content):
         result1, mac = commands.\
-                getstatusoutput("ifconfig master | awk '/HWaddr/{ print $5 }'")
+                getstatusoutput("ifconfig br100 | awk '/HWaddr/{ print $5 }'")
         result1, ip = commands.\
-                getstatusoutput("ifconfig master | "
+                getstatusoutput("ifconfig br100 | "
                                 "awk '/inet addr:/{ print $2 }' "
                                 "| awk -F: '{print $2 }'")
         data = manager.build_host_data(mac, "no", ip, build=False)
