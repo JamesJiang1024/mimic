@@ -17,9 +17,13 @@
 """
 Enable Driver and supporting meta-classes
 """
+import logging
 import json
+
 from mimic.engine.driver import base
 from mimic.engine import foreman_helper
+
+LOG = logging.getLogger(__name__)
 
 
 class ListIncrementDriver(base.BaseSmartParameter):
@@ -37,6 +41,8 @@ class ListIncrementDriver(base.BaseSmartParameter):
         # init parameters
         result = ""
         selected_lookup = []
+
+        LOG.info("Increase ip list change: %s" % ip)
 
         # get value of lookup_keys and lookup_key_ids
         for host in hosts:
