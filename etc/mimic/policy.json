@@ -77,6 +77,12 @@
        "role": ["master"],
        "class": ["sunfire::masternode"]
    },
+  "us_tftp_servername":{
+       "driver": "enable_driver",
+       "format": "master.ustack.in",
+       "role": ["master"],
+       "class": ["sunfire::masternode"]
+   },
   "us_reserve_bottom":{
        "driver": "env_driver",
        "format": "env=reserve_bottom",
