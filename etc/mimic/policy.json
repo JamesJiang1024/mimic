@@ -108,7 +108,7 @@
        "class": ["sunfire::masternode", "sunfire::compute"]
   },
   "internal_address":{
-       "driver": "env_driver",
+       "driver": "local_ip_driver",
        "format": "env=master",
        "role": ["compute"],
        "class": ["sunfire::compute"]
@@ -120,7 +120,7 @@
        "class": ["sunfire::compute"]
    },
   "controller_address":{
-       "driver": "local_ip_driver",
+       "driver": "enable_driver",
        "format": "master.ustack.in",
        "role": ["compute"],
        "class": ["sunfire::compute"]
