@@ -107,15 +107,27 @@
        "role": ["master", "compute"],
        "class": ["sunfire::masternode", "sunfire::compute"]
   },
-  "db_host":{
+  "internal_address":{
+       "driver": "env_driver",
+       "format": "env=master",
+       "role": ["compute"],
+       "class": ["sunfire::compute"]
+   },
+  "ntp_server":{
        "driver": "enable_driver",
        "format": "master.ustack.in",
        "role": ["compute"],
        "class": ["sunfire::compute"]
    },
-  "rabbit_host":{
+  "controller_address":{
        "driver": "enable_driver",
        "format": "master.ustack.in",
+       "role": ["compute"],
+       "class": ["sunfire::compute"]
+   },
+  "fixed_range":{
+       "driver": "cidr_driver",
+       "format": "subnet/netmask",
        "role": ["compute"],
        "class": ["sunfire::compute"]
    },
