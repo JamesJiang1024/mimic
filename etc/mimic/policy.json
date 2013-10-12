@@ -120,7 +120,7 @@
        "class": ["sunfire::compute"]
    },
   "controller_address":{
-       "driver": "enable_driver",
+       "driver": "local_ip_driver",
        "format": "master.ustack.in",
        "role": ["compute"],
        "class": ["sunfire::compute"]
