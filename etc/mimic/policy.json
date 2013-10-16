@@ -95,6 +95,13 @@
        "role": ["master"],
        "class": ["sunfire::masternode"]
    },
+  "us_dhcp_gateway":{
+       "driver": "env_driver",
+       "format": "env=gateway",
+       "role": ["master"],
+       "class": ["sunfire::masternode"]
+   },
+
   "us_monitors_addr":{
        "driver": "list_increment_driver",
        "format": "ipaddr",
