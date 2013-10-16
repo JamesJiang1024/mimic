@@ -6,15 +6,25 @@ from mimic.engine import manager
 
 
 puppet_status = [
-    {'service': 'begin', 'status': False},
-    {'service': 'nova-api', 'status': False},
-    {'service': 'nova-scheduler', 'status': False},
-    {'service': 'nova-conductor', 'status': False},
-    {'service': 'nova-compute', 'status': False},
-    {'service': 'ceilometer-api', 'status': False},
+    {'service': 'prepare to install UOS', 'status': False},
     {'service': 'messagebus', 'status': False},
     {'service': 'libvirt', 'status': False},
-    {'service': 'finished', 'status': False}
+    {'service': 'tgtd', 'status': False},
+    {'service': 'nova-api', 'status': False},
+    {'service': 'nova-compute', 'status': False},
+    {'service': 'nova-network', 'status': False},
+    {'service': 'glance-api', 'status': False},
+    {'service': 'glance-registry', 'status': False},
+    {'service': 'cinder-api', 'status': False},
+    {'service': 'cinder-volume', 'status': False},
+    {'service': 'swift-container-rep', 'status': False},
+    {'service': 'swift-account-auditor', 'status': False},
+    {'service': 'swift-object', 'status': False},
+    {'service': 'ceilometer-api', 'status': False},
+    {'service': 'ceilometer-agent-central', 'status': False},
+    {'service': 'ceilometer-collector', 'status': False},
+    {'service': 'terminator-server', 'status': False},
+    {'service': 'finished install UOS', 'status': False}
  ]
 
 

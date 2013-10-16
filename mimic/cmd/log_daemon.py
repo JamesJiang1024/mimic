@@ -40,22 +40,30 @@ def send_status(service):
 
 def main():
     status_lib = [
-            'nova-api',
-            'nova-scheduler',
-            'nova-conductor',
-            'nova-compute',
-            'ceilometer-api',
-            'ustack-mimic-api',
-            'ustack-placebo',
             'messagebus',
-            'libvirt'
+            'libvirt',
+            'tgtd',
+            'nova-api',
+            'nova-compute',
+            'nova-network',
+            'glance-api',
+            'glance-registry',
+            'cinder-api',
+            'cinder-volume',
+            'swift-account-auditor',
+            'swift-container-rep',
+            'swift-object',
+            'ceilometer-api',
+            'ceilometer-agent-central',
+            'ceilometer-collector',
+            'terminator-server'
            ]
     commands.getstatusoutput("touch /tmp/master_puppet.log")
     for line in tailer.follow(open('/tmp/master_puppet.log')):
         if 'Applying configuration' in line:
-            send_status("begin")
+            send_status("prepare to install UOS")
         elif 'Finished catalog run' in line:
-            send_status("finished")
+            send_status("finished install UOS")
 
         for status in status_lib:
             if "ensure changed 'stopped' to 'running'" \
