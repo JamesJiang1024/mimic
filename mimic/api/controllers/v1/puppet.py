@@ -6,7 +6,7 @@ from mimic.engine import manager
 
 
 puppet_status = [
-    {'service': 'prepare to install UOS', 'status': False},
+    {'service': 'uos-preinstall', 'status': False},
     {'service': 'messagebus', 'status': False},
     {'service': 'libvirt', 'status': False},
     {'service': 'tgtd', 'status': False},
@@ -24,7 +24,7 @@ puppet_status = [
     {'service': 'ceilometer-agent-central', 'status': False},
     {'service': 'ceilometer-collector', 'status': False},
     {'service': 'terminator-server', 'status': False},
-    {'service': 'finished install UOS', 'status': False}
+    {'service': 'uos-cleanup', 'status': False}
  ]
 
 

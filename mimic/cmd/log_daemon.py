@@ -61,9 +61,9 @@ def main():
     commands.getstatusoutput("touch /tmp/master_puppet.log")
     for line in tailer.follow(open('/tmp/master_puppet.log')):
         if 'Applying configuration' in line:
-            send_status("prepare to install UOS")
+            send_status("uos-preinstall")
         elif 'Finished catalog run' in line:
-            send_status("finished install UOS")
+            send_status("uos-cleanup")
 
         for status in status_lib:
             if "ensure changed 'stopped' to 'running'" \
