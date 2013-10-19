@@ -40,8 +40,6 @@ def send_status(service):
 
 def main():
     status_lib = [
-            'messagebus',
-            'libvirt',
             'tgtd',
             'nova-api',
             'nova-compute',

@@ -7,8 +7,6 @@ from mimic.engine import manager
 
 puppet_status = [
     {'service': 'uos-preinstall', 'status': False},
-    {'service': 'messagebus', 'status': False},
-    {'service': 'libvirt', 'status': False},
     {'service': 'tgtd', 'status': False},
     {'service': 'nova-api', 'status': False},
     {'service': 'nova-compute', 'status': False},
