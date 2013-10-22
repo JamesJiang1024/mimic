@@ -53,8 +53,7 @@ def main():
             'swift-object',
             'ceilometer-api',
             'ceilometer-agent-central',
-            'ceilometer-collector',
-            'terminator-server'
+            'ceilometer-collector'
            ]
     commands.getstatusoutput("touch /tmp/master_puppet.log")
     for line in tailer.follow(open('/tmp/master_puppet.log')):

@@ -21,7 +21,6 @@ puppet_status = [
     {'service': 'ceilometer-api', 'status': False},
     {'service': 'ceilometer-agent-central', 'status': False},
     {'service': 'ceilometer-collector', 'status': False},
-    {'service': 'terminator-server', 'status': False},
     {'service': 'uos-cleanup', 'status': False}
  ]
 
