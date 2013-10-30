@@ -25,7 +25,7 @@ def designate_client():
     global _CLIENT
 
     if _CLIENT is None:
-        endpoint = app.load_endpoints()['dns']
+        endpoint = app.load_endpoints()['dns']['admin']
         # Currently designate is set to noauth
         _CLIENT = Client(endpoint=endpoint, token="fake_token")
     return _CLIENT
