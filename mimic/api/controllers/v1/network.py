@@ -25,7 +25,6 @@ class NetworkController(rest.RestController):
         self._update_env_key_value("reserve_bottom",
                                    reserve)
         result['reserve_bottom'] = reserve
-        foreman_helper.build_pxe_default()
 
         networklist = {
             "dhcp_range": None,
@@ -38,7 +37,7 @@ class NetworkController(rest.RestController):
         networklist = self.get_network_info(networklist)
         networklist['fixed_range'] = str(networklist['subnet']) + "/" + str(networklist['netmask'])
         self._update_env_key_value("fixed_range", networklist['fixed_range'])
-        foreman_helper.update_subnet(networklist['fixed_range'], 
+        foreman_helper.update_subnet(networklist['fixed_range'],
                                      networklist['gateway'],
                                      content['dhcp_range'],
                                      networklist['master'])

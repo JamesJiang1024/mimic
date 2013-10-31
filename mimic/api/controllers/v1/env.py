@@ -31,9 +31,9 @@ class EnvController(rest.RestController):
             return result[0]["value"]
 
     @wsme_pecan.wsexpose(unicode, unicode, body=unicode)
-    def put(self, key, content):
+    def put(self, content):
         dbapi = api.get_instance()
-        result = self._update_env_key_value(key, content['value'])
+        result = self._update_env_key_value(content['key'], content['value'])
         return True
 
     def _update_env_key_value(self, key, value):

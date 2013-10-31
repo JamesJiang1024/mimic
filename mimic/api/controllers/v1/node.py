@@ -13,6 +13,8 @@ class NodeController(rest.RestController):
     @wsme_pecan.wsexpose(unicode, unicode, body=unicode)
     def post(self, content):
         mac = content['mac']
+        if not mac:
+            return False
         local = content['local']
         ip = None
         if content.has_key("ip"):
