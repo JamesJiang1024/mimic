@@ -6,20 +6,27 @@
 from scapy.all import *
 import ConfigParser
 
+LOG = logging.getLogger(__name__)
 
 def dhcp_scan():
+    LOG.info("Begin dhcp scanning")
     conf.checkIPaddr = False
     fam, hw = get_if_raw_hwaddr(conf.iface)
+    LOG.info("Scanning hw %s" % conf.iface)
     dhcp_discover = Ether(dst="ff:ff:ff:ff:ff:ff") /\
             IP(src="0.0.0.0", dst="255.255.255.255") /\
             UDP(sport=68, dport=67) / BOOTP(chaddr=hw) /\
             DHCP(options=[("message-type", "discover"), "end"])
     ans, unans = srp(dhcp_discover, retry=1, timeout=2)
+    if ans == []:
+        LOG.info("Did not find any dhcp server")
     mac, ip = (None, None)
     num = 0
     for p in ans:
         num += 1
+        LOG.info("Summary data %s" % p) 
         (mac, ip) = p[1][Ether].src, p[1][DHCP].options[1][1]
+        LOG.info("Find dhcp server %s %s" % (mac, ip)) 
     if num == 0:
         return True
     else:
