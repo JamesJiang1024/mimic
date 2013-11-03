@@ -24,9 +24,9 @@ def dhcp_scan():
     num = 0
     for p in ans:
         num += 1
-        LOG.info("Summary data %s" % p) 
+        LOG.info(p)
         (mac, ip) = p[1][Ether].src, p[1][DHCP].options[1][1]
-        LOG.info("Find dhcp server %s %s" % (mac, ip)) 
+        LOG.info("Find dhcp server %s %s" % (mac, ip))
     if num == 0:
         return True
     else:
