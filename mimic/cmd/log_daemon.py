@@ -22,9 +22,47 @@ Run logger listener
 """
 
 import json
+import sys
+import logging
 import tailer
 import httplib2
 import commands
+
+from oslo.config import cfg
+
+from mimic.openstack.common import log
+from mimic.common import service as mimic_service
+
+daemon_opts = [
+    cfg.StrOpt('mimic_master_server',
+               default='http://localhost:9100',
+               help='mimic masters host ip'),
+    cfg.StrOpt('uos_install_stage2_log',
+               default='/var/log/mimic/uos_install_stage2.log',
+               help='UOS install log in stage2'),
+    cfg.ListOpt('uos_status_modules',
+                default=[
+                      'tgtd',
+                      'nova-api',
+                      'nova-compute',
+                      'nova-network',
+                      'glance-api',
+                      'glance-registry',
+                      'cinder-api',
+                      'cinder-volume',
+                      'swift-account-auditor',
+                      'swift-container-rep',
+                      'swift-object',
+                      'ceilometer-api',
+                      'ceilometer-agent-central',
+                      'ceilometer-collector'
+                ])
+    ]
+
+LOG = log.getLogger(__name__)
+
+CONF = cfg.CONF
+CONF.register_opts(daemon_opts)
 
 
 def send_status(service):
@@ -33,36 +71,35 @@ def send_status(service):
         "status": True
     }
     h = httplib2.Http(".cache")
-    resp, content = h.request("http://localhost:9100/v1/puppets", "PUT",
+    resp, content = h.request("%s/v1/puppets" %
+                              CONF.mimic_master_server,
+                              "PUT",
                               body=json.dumps(data),
                               headers={'content-type': 'application/json'})
+    return data
+
+
+def get_status_from_input(line):
+    LOG.debug("Mimic Log Service Scanning Line: %s" % line)
+    if 'Applying configuration' in line:
+        LOG.info("Mimic Log Service Find Status: Pre Install")
+        return send_status("uos-preinstall")
+    elif 'Finished catalog run' in line:
+        LOG.info("Mimic Log Service Find Status: Clean Up")
+        return send_status("uos-cleanup")
+
+    for status in CONF.uos_status_modules:
+        if "ensure changed 'stopped' to 'running'" \
+           in line and status in line:
+            LOG.info("Mimic Log Service Find Status: %s is OK" % status)
+            return send_status(status)
 
 
 def main():
-    status_lib = [
-            'tgtd',
-            'nova-api',
-            'nova-compute',
-            'nova-network',
-            'glance-api',
-            'glance-registry',
-            'cinder-api',
-            'cinder-volume',
-            'swift-account-auditor',
-            'swift-container-rep',
-            'swift-object',
-            'ceilometer-api',
-            'ceilometer-agent-central',
-            'ceilometer-collector'
-           ]
-    commands.getstatusoutput("touch /tmp/master_puppet.log")
-    for line in tailer.follow(open('/tmp/master_puppet.log')):
-        if 'Applying configuration' in line:
-            send_status("uos-preinstall")
-        elif 'Finished catalog run' in line:
-            send_status("uos-cleanup")
-
-        for status in status_lib:
-            if "ensure changed 'stopped' to 'running'" \
-               in line and status in line:
-                send_status(status)
+    mimic_service.prepare_service(sys.argv)
+    CONF.log_opt_values(LOG, logging.INFO)
+    LOG.info("Mimic Log Service Start, Scanning %s." %
+             CONF.uos_install_stage2_log)
+    commands.getstatusoutput("touch %s" % CONF.uos_install_stage2_log)
+    for line in tailer.follow(open(CONF.uos_install_stage2_log)):
+        get_status_from_input(line)

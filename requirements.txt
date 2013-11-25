@@ -4,14 +4,14 @@ SQLAlchemy>=0.7.8,<0.7.99
 sqlalchemy-migrate>=0.7.2
 anyjson>=0.3.3
 iso8601>=0.1.4
-netaddr>=0.7.6
+netaddr>=0.7.4
 argparse
 eventlet>=0.13.0
 python-keystoneclient>=0.3.2
 python-designateclient==0.0.4
 pecan>=0.2.0
 WSME>=0.5b2
-MySQL-python
+#MySQL-python
 oslo.config>=1.1.0
 httplib2
 six<1.4
