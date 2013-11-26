@@ -42,9 +42,9 @@ class DiscoveredServerController(rest.RestController):
 
     @wsme_pecan.wsexpose(unicode, unicode, unicode)
     def get_one(self, server_id):
-        dbapi = api.get_instance()
-        dbapi.get_lookup_key("db_host", "sunfire::compute")
+        LOG.info("find by serverid: %s" % str(server_id))
         server = mc.get(str(server_id))
+        LOG.info("get discovered_server from cache: %s" % server)
         return {"data": server}
 
     @wsme_pecan.wsexpose(unicode, unicode)
@@ -52,10 +52,13 @@ class DiscoveredServerController(rest.RestController):
         # info from cache
         discovered_cache = mc.get("discovered_new") or []
 
-        LOG.info("Get discovered Server Into Cache: %s" % discovered_cache)
+        LOG.info("get discovered server list from cache: %s"
+                 % discovered_cache)
         for server in discovered_cache:
             server['status'] = "pendding"
             mc[str(server['uuid'])] = server
+
+        LOG.info("now memory is: %s" % mc)
 
         # reset cache
         result = mc.get("discovered_new")
@@ -71,28 +74,28 @@ class DiscoveredServerController(rest.RestController):
 
         if not self.check_create_input(discovered_server):
             return False
-        LOG.info("New Server Being discovered: %s" % discovered_server)
-
-        #discover new machine
+        LOG.info("new server being discovered: %s" % discovered_server)
 
         #read data from cache
         discovered_cache = mc.get("discovered_new") or []
 
+        LOG.debug("now cache are %s" % discovered_cache)
         #append server to cache
         name = "HD" + str(len(discovered_cache))
         discovered_server['name'] = name
+        LOG.debug("now append new server to cache")
         discovered_cache.append(discovered_server)
         mc["discovered_new"] = discovered_cache
-        LOG.info("Now Cached Servers: %s" % discovered_cache)
+        LOG.info("now cache are: %s" % discovered_cache)
 
         return {"data": discovered_cache}
 
     @wsme_pecan.wsexpose(unicode, unicode, unicode, body=unicode)
     def put(self, server_id, delta):
         server = mc.get(str(server_id))
-        LOG.info("Update discovered Server Status Before: %s" % server)
+        LOG.info("update discovered server status before: %s" % server)
 
         server['status'] = delta['status']
         mc[str(server_id)] = server
-        LOG.info("Update discovered Server Status After: %s" % server)
+        LOG.info("update discovered server status after: %s" % server)
         return {"data": server}

@@ -8,6 +8,7 @@ import ConfigParser
 
 LOG = logging.getLogger(__name__)
 
+
 def dhcp_scan():
     LOG.info("Begin dhcp scanning")
     conf.checkIPaddr = False

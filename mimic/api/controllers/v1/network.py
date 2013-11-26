@@ -1,4 +1,3 @@
-import commands
 from pecan import rest
 from mimic.db import api
 from mimic.engine import foreman_helper
@@ -19,11 +18,13 @@ class NetworkController(rest.RestController):
         post foreman information
         """
         result = {}
+        LOG.info("install stage2 dhcp range is: %s" % content['dhcp_range'])
         self._update_env_key_value("dhcp_range", content['dhcp_range'])
         result['dhcp_range'] = content['dhcp_range']
         reserve = content['dhcp_range'].split(" ")[1].split(".")[-1]
-        self._update_env_key_value("reserve_bottom",
-                                   reserve)
+
+        LOG.info("reserve_bottom is get from dhcp range is: %s" % reserve)
+        self._update_env_key_value("reserve_bottom", reserve)
         result['reserve_bottom'] = reserve
 
         networklist = {
@@ -35,12 +36,21 @@ class NetworkController(rest.RestController):
             "fixed_range": None
         }
         networklist = self.get_network_info(networklist)
-        networklist['fixed_range'] = str(networklist['subnet']) + "/" + str(networklist['netmask'])
+
+        networklist['fixed_range'] = str(networklist['subnet']) \
+                + "/" + str(networklist['netmask'])
         self._update_env_key_value("fixed_range", networklist['fixed_range'])
-        foreman_helper.update_subnet(networklist['fixed_range'],
-                                     networklist['gateway'],
-                                     content['dhcp_range'],
-                                     networklist['master'])
+
+        LOG.info("update sunet with fixed_range:"
+                 "%s, gateway: %s, dhcp_range: %s, master: %s"
+                 % (networklist['fixed_range'],
+                    networklist['gateway'], content['dhcp_range'],
+                    networklist['master']))
+
+        result = foreman_helper.update_subnet(networklist['fixed_range'],
+                                              networklist['gateway'],
+                                              content['dhcp_range'],
+                                              networklist['master'])
 
         return result
 
@@ -52,12 +62,15 @@ class NetworkController(rest.RestController):
     def get_network_info(self, networklist):
         dbapi = api.get_instance()
         for network in networklist:
+            LOG.info("find %s in network env" % network)
             value = dbapi.find_lookup_value_by_match("env=%s" % network)
+
             if len(value) > 0:
                 if network != "netmask":
                     networklist[network] = value[0].value
                 else:
                     networklist[network] = int(value[0].value)
+        LOG.info("network infomation get from database is: %s" % networklist)
         return networklist
 
     @wsme_pecan.wsexpose(unicode)
@@ -86,19 +99,20 @@ class NetworkController(rest.RestController):
         dbapi = api.get_instance()
         try:
             gateway = dbapi.find_lookup_value_by_match("env=gateway")[0].value
-            master = dbapi.\
-                    find_lookup_value_by_match("env=master")[0].value
+            master = dbapi.find_lookup_value_by_match("env=master")[0].value
+            LOG.info("get env from database, gateway: %s, master: %s" %
+                     (gateway, master))
         except:
             return {
                 "error": "system error with no master and gateway"
             }
-        LOG.info("Begin to scanning network")
+        LOG.info("begin to scanning network")
         dhcp_status = network_scan.dhcp_scan()
-        LOG.info("Scanning DHCP")
+        LOG.info("scanning dhcp")
         gateway_status = network_scan.gateway_scan(gateway)
-        LOG.info("Scanning Gateway")
+        LOG.info("scanning gateway")
         #subnet_status = network_scan.subnet_scan(gateway, master)
-        LOG.info("Scanning Subnet")
+        LOG.info("scanning subnet")
         subnet_status = True
         result = {
             "dhcp_status": dhcp_status,

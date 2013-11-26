@@ -4,25 +4,32 @@ from pecan import rest
 from mimic.common.wsmeext import pecan as wsme_pecan
 from mimic.engine import manager
 
+from mimic.openstack.common import log
+from oslo.config import cfg
 
-puppet_status = [
-    {'service': 'uos-preinstall', 'status': False},
-    {'service': 'tgtd', 'status': False},
-    {'service': 'nova-api', 'status': False},
-    {'service': 'nova-compute', 'status': False},
-    {'service': 'nova-network', 'status': False},
-    {'service': 'glance-api', 'status': False},
-    {'service': 'glance-registry', 'status': False},
-    {'service': 'cinder-api', 'status': False},
-    {'service': 'cinder-volume', 'status': False},
-    {'service': 'swift-container-rep', 'status': False},
-    {'service': 'swift-account-auditor', 'status': False},
-    {'service': 'swift-object', 'status': False},
-    {'service': 'ceilometer-api', 'status': False},
-    {'service': 'ceilometer-agent-central', 'status': False},
-    {'service': 'ceilometer-collector', 'status': False},
-    {'service': 'uos-cleanup', 'status': False}
- ]
+puppet_opts = [
+    cfg.StrOpt('mimic_internal_interface',
+               default='br100',
+               help='mimic internal interface')
+]
+
+LOG = log.getLogger(__name__)
+
+CONF = cfg.CONF
+CONF.register_opts(puppet_opts)
+
+
+def merge_service_to_status(puppet_status):
+    status_modules = CONF.uos_status_modules
+    puppet_status.append({'service': 'uos-preinstall', 'status': False})
+
+    for status in status_modules:
+        puppet_status.append({'service': status, 'status': False})
+
+    puppet_status.append({'service': 'uos-cleanup', 'status': False})
+    return puppet_status
+
+puppet_status = merge_service_to_status([])
 
 
 class PuppetController(rest.RestController):
@@ -30,23 +37,36 @@ class PuppetController(rest.RestController):
 
     @wsme_pecan.wsexpose(unicode, unicode, body=unicode)
     def post(self, content):
-        result1, mac = commands.\
-                getstatusoutput("ifconfig br100 | awk '/HWaddr/{ print $5 }'")
-        result1, ip = commands.\
-                getstatusoutput("ifconfig br100 | "
-                                "awk '/inet addr:/{ print $2 }' "
-                                "| awk -F: '{print $2 }'")
+        mac_command = "ifconfig %s | awk '/HWaddr/{ print $5 }'" % \
+                CONF.mimic_internal_interface
+        ip_command = "ifconfig %s | awk '/inet addr:/{ print $2 }'"
+        " | awk -F: '{print $2 }'" % CONF.mimic_internal_interface
+
+        LOG.info("execute commands to get %s mac: %s",
+                 (CONF.mimic_internal_interface, mac_command))
+        LOG.info("execute commands to get %s ip: %s",
+                 (CONF.mimic_internal_interface, ip_command))
+
+        result1, mac = commands.getstatusoutput(mac_command)
+        result1, ip = commands.getstatusoutput(ip_command)
+
+        LOG.info("create first machine, mac: %s , ip: %s" % (mac, ip))
         data = manager.build_host_data(mac, "no", ip, build=False)
-        subprocess.Popen("puppet agent -vt >> /tmp/master_puppet.log",
+
+        LOG.info("create first machine finished begin to configuration")
+        subprocess.Popen("puppet agent -vt >> %s" %
+                         CONF.uos_install_stage2_log,
                          shell=True)
         return data
 
     @wsme_pecan.wsexpose(unicode)
     def get_all(self):
+        LOG.info("now puppet status are: %s" % puppet_status)
         return puppet_status
 
     @wsme_pecan.wsexpose(unicode, unicode, body=unicode)
     def put(self, content):
+        LOG.info("now puppet status are: %s" % puppet_status)
         for puppet_s in puppet_status:
             if puppet_s['service'] == content['service']:
                 puppet_s['status'] = True

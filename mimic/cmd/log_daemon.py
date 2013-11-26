@@ -33,36 +33,9 @@ from oslo.config import cfg
 from mimic.openstack.common import log
 from mimic.common import service as mimic_service
 
-daemon_opts = [
-    cfg.StrOpt('mimic_master_server',
-               default='http://localhost:9100',
-               help='mimic masters host ip'),
-    cfg.StrOpt('uos_install_stage2_log',
-               default='/var/log/mimic/uos_install_stage2.log',
-               help='UOS install log in stage2'),
-    cfg.ListOpt('uos_status_modules',
-                default=[
-                      'tgtd',
-                      'nova-api',
-                      'nova-compute',
-                      'nova-network',
-                      'glance-api',
-                      'glance-registry',
-                      'cinder-api',
-                      'cinder-volume',
-                      'swift-account-auditor',
-                      'swift-container-rep',
-                      'swift-object',
-                      'ceilometer-api',
-                      'ceilometer-agent-central',
-                      'ceilometer-collector'
-                ])
-    ]
-
 LOG = log.getLogger(__name__)
 
 CONF = cfg.CONF
-CONF.register_opts(daemon_opts)
 
 
 def send_status(service):
@@ -80,25 +53,25 @@ def send_status(service):
 
 
 def get_status_from_input(line):
-    LOG.debug("Mimic Log Service Scanning Line: %s" % line)
+    LOG.debug("mimic log service scanning line: %s" % line)
     if 'Applying configuration' in line:
-        LOG.info("Mimic Log Service Find Status: Pre Install")
+        LOG.info("mimic log service find status: pre install")
         return send_status("uos-preinstall")
     elif 'Finished catalog run' in line:
-        LOG.info("Mimic Log Service Find Status: Clean Up")
+        LOG.info("mimic log service find status: clean up")
         return send_status("uos-cleanup")
 
     for status in CONF.uos_status_modules:
         if "ensure changed 'stopped' to 'running'" \
            in line and status in line:
-            LOG.info("Mimic Log Service Find Status: %s is OK" % status)
+            LOG.info("mimic log service find status: %s is ok" % status)
             return send_status(status)
 
 
-def main():
+def main():  # pragma: no cover
     mimic_service.prepare_service(sys.argv)
     CONF.log_opt_values(LOG, logging.INFO)
-    LOG.info("Mimic Log Service Start, Scanning %s." %
+    LOG.info("mimic log service start, scanning %s." %
              CONF.uos_install_stage2_log)
     commands.getstatusoutput("touch %s" % CONF.uos_install_stage2_log)
     for line in tailer.follow(open(CONF.uos_install_stage2_log)):

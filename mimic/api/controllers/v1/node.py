@@ -12,11 +12,13 @@ class NodeController(rest.RestController):
 
     @wsme_pecan.wsexpose(unicode, unicode, body=unicode)
     def post(self, content):
+        LOG.info("post data to create node, content is: %s" % content)
         mac = content['mac']
         if not mac:
             return False
         local = content['local']
         ip = None
-        if content.has_key("ip"):
+        if "ip" in content:
             ip = content['ip']
+        #TODO(wentian): judge if first node is created by puppet agent
         return manager.build_host_data(mac, local, ip)
