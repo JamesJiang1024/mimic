@@ -21,6 +21,15 @@ class DbLookupValueTestCase(base.DbTestCase):
     def test_create_lookup_value(self):
         self._create_test_lookup_value()
 
+    def test_find_lookup_value(self):
+        self._create_test_lookup_value(id=1, match="fqdn=abc", lookup_key_id=1)
+        self._create_test_lookup_value(id=2, match="fqdn=bcd", lookup_key_id=2)
+        self._create_test_lookup_value(id=3, match="fqdn=bcd", lookup_key_id=3)
+        res = self.dbapi.find_lookup_value_by_match("fqdn=abc")
+        self.assertEqual(res[0].id, 1)
+        res = self.dbapi.find_lookup_value_by_id_match("fqdn=bcd", 3)
+        self.assertEqual(res[0].lookup_key_id, 3)
+
     def test_update_lookup_value(self):
         c = self._create_test_lookup_value()
         res = self.dbapi.get_lookup_value(c['id'])

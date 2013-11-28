@@ -6,10 +6,10 @@ from mimic.tests.api import base
 from mimic.tests.db import utils
 
 
-class TestListNodes(base.FunctionalTest):
+class TestListEnvs(base.FunctionalTest):
 
     def setUp(self):
-        super(TestListNodes, self).setUp()
+        super(TestListEnvs, self).setUp()
         self.dbapi.create_lookup_value(
             utils.get_test_lookup_value(id=1, match="env=dhcp", value="abc"))
 

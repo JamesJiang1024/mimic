@@ -1,2 +1,2 @@
 [run]
-omit=mimic/openstack/common/*
+omit=mimic/openstack/common/*, mimic/common/*, mimic/tests/*, mimic/cmd/api*, mimic/api/app*, mimic/api/middleware*, mimic/cmd/generate_override*, mimic/cmd/manage*, mimic/db/sqlalchemy/manage*, mimic/db/sqlalchemy/migrate_repo/manage*, mimic/engine/designate_helper* 

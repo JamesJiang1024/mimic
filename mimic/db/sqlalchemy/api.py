@@ -101,12 +101,12 @@ class Connection(api.Connection):
             raise exception.LookupValueNotFound(lookup_value=lookup_value)
         return result
 
-    def _get_puppet_classes_id(self, puppet_class):
+    def _get_puppet_classes_id(self, puppet_class):  # pragma: no cover
         query = model_query(models.PuppetClasses)
         query = query.filter_by(name=puppet_class)
         return query.one()
 
-    def get_lookup_key(self, key, puppet_class):
+    def get_lookup_key(self, key, puppet_class):  # pragma: no cover
         puppet_class_id = self._get_puppet_classes_id(puppet_class).id
         query = model_query(models.EnvironmentClasses.lookup_key_id)
         query = query.filter_by(puppetclass_id=puppet_class_id)

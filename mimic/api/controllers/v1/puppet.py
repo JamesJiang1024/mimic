@@ -10,7 +10,24 @@ from oslo.config import cfg
 puppet_opts = [
     cfg.StrOpt('mimic_internal_interface',
                default='br100',
-               help='mimic internal interface')
+               help='mimic internal interface'),
+    cfg.ListOpt('uos_status_modules',
+                default=[
+                      'tgtd',
+                      'nova-api',
+                      'nova-compute',
+                      'nova-network',
+                      'glance-api',
+                      'glance-registry',
+                      'cinder-api',
+                      'cinder-volume',
+                      'swift-account-auditor',
+                      'swift-container-rep',
+                      'swift-object',
+                      'ceilometer-api',
+                      'ceilometer-agent-central',
+                      'ceilometer-collector'
+     ])
 ]
 
 LOG = log.getLogger(__name__)
@@ -39,12 +56,12 @@ class PuppetController(rest.RestController):
     def post(self, content):
         mac_command = "ifconfig %s | awk '/HWaddr/{ print $5 }'" % \
                 CONF.mimic_internal_interface
-        ip_command = "ifconfig %s | awk '/inet addr:/{ print $2 }'"
-        " | awk -F: '{print $2 }'" % CONF.mimic_internal_interface
+        ip_command = "ifconfig %s " % CONF.mimic_internal_interface
+        "| awk '/inet addr:/{ print $2 }' | awk -F: '{print $2 }'"
 
-        LOG.info("execute commands to get %s mac: %s",
+        LOG.info("execute commands to get %s mac: %s" %
                  (CONF.mimic_internal_interface, mac_command))
-        LOG.info("execute commands to get %s ip: %s",
+        LOG.info("execute commands to get %s ip: %s" %
                  (CONF.mimic_internal_interface, ip_command))
 
         result1, mac = commands.getstatusoutput(mac_command)

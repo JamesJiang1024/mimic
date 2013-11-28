@@ -1,8 +1,3 @@
-import mock
-import webtest.app
-
-from mimic.common import exception
-from mimic.openstack.common import uuidutils
 from mimic.tests.api import base
 from mimic.tests.api import utils
 
@@ -13,8 +8,8 @@ class TestListDiscoveredServer(base.FunctionalTest):
         super(TestListDiscoveredServer, self).setUp()
         self.machines = []
         for i in (0, 3):
-           self.post_json('/discovered_servers', utils.get_machine(str(i), str(i)))
-           self.machines.append(utils.get_machine(str(i), str(i)))
+            self.post_json('/discovered_servers', utils.get_machine(str(i), str(i)))
+            self.machines.append(utils.get_machine(str(i), str(i)))
 
     def test_detail(self):
         for m in self.machines:
