@@ -36,6 +36,9 @@ class EnvDriver(base.BaseSmartParameter):
         matched_value = self.dbapi.find_lookup_value_by_match("env=%s"
                                                             % passd)[0].value
         result = self.format
+        print result
+        print removed
+        print matched_value
         result = result.replace(removed, matched_value)
         result = result.replace(";", "")
 

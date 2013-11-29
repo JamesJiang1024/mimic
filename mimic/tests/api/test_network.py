@@ -3,6 +3,7 @@ Tests for the API /networks/ methods.
 """
 
 import mock
+import contextlib
 
 from mimic.engine import foreman_helper
 from mimic.tests.api import base
@@ -40,20 +41,29 @@ class TestNetworks(base.FunctionalTest):
             'dhcp_range': '192.168.10.0 192.168.10.99',
             'subnet': '192.168.10.0'
         }
-        foreman_helper.update_subnet = mock.MagicMock(return_value=None)
-        response = self.post_json('/networks', data)
-        self.assertEqual(response.status_int, 200)
+        with contextlib.nested(
+             mock.patch("mimic.engine.foreman_helper.update_subnet",
+                        mock.MagicMock(return_value=None))
+        ):
+            response = self.post_json('/networks', data)
+            self.assertEqual(response.status_int, 200)
 
     def test_one(self):
-        network_scan.dhcp_scan = mock.MagicMock(return_value=True)
-        network_scan.gateway_scan = mock.MagicMock(return_value=True)
-        data = {
-            "dhcp_status": True,
-            "gateway_status": True,
-            "subnet_status": True
-        }
-        result = self.get_json('/networks/status')
-        self.assertEqual(data, result)
+        with contextlib.nested(
+            mock.patch(
+                "mimic.engine.network_scanning.dhcp_scan",
+                       mock.MagicMock(return_value=True)),
+            mock.patch(
+                "mimic.engine.network_scanning.gateway_scan",
+                mock.MagicMock(return_value=True))
+        ):
+            data = {
+                "dhcp_status": True,
+                "gateway_status": True,
+                "subnet_status": True
+            }
+            result = self.get_json('/networks/status')
+            self.assertEqual(data, result)
 
     def test_many(self):
         network_scan.get_network_info_from_file = mock.MagicMock(return_value={
