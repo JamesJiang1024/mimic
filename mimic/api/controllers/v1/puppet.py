@@ -56,8 +56,7 @@ class PuppetController(rest.RestController):
     def post(self, content):
         mac_command = "ifconfig %s | awk '/HWaddr/{ print $5 }'" % \
                 CONF.mimic_internal_interface
-        ip_command = "ifconfig %s " % CONF.mimic_internal_interface
-        "| awk '/inet addr:/{ print $2 }' | awk -F: '{print $2 }'"
+        ip_command = "ifconfig %s | awk '/inet addr:/{ print $2 }' | awk -F: '{print $2 }'" % CONF.mimic_internal_interface
 
         LOG.info("execute commands to get %s mac: %s" %
                  (CONF.mimic_internal_interface, mac_command))
