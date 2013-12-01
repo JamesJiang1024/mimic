@@ -38,11 +38,14 @@ class ListIncrementDriver(base.BaseSmartParameter):
         post_role = kwargs['role']
         hosts = foreman_helper.hosts()
 
+        LOG.info("get information ip: %s, role: %s, hosts: %s" %
+                 (ip, post_role, hosts))
+
         # init parameters
         result = ""
         selected_lookup = []
 
-        LOG.info("Increase ip list change: %s" % ip)
+        LOG.info("increase ip list change: %s" % ip)
 
         # get value of lookup_keys and lookup_key_ids
         for host in hosts:
