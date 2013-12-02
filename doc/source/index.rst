@@ -10,28 +10,66 @@ Contents:
 
     Project mimic 是uos installer以及hostmanager的后端, 承担安装uos的业务逻辑。
 
-Getting Started
-===============
 
-    UOS installer的后端包括了几个部分：
+Getting Started For Developer
+-----------------------------
+install foreman: http://theforeman.org/manuals/1.2/#3.InstallingForeman
 
-    1. 注册
+git clone git@git.ustack.com:ustack/mimic.git 
 
-    2. 网段分配
+安装依赖、配置环境::
+   
+    virtualenv .venv
+    source .venv/bin/activate
+    pip install -r mimic/test_requirements
+    pip install -r mimic/requirements
 
-    3. 网络检测
+单元测试::
+    
+    testr run
 
-    4. 服务安装
+覆盖率测试::
 
-    Host Manager的后端包括了几个部分:
+    python setup.py testr --coverage 
+    coverage report -m
 
-    1. 硬件发现
+Getting Started For User
+------------------------
 
-    2. 硬件自动注册
+安装UOS: wget http://mirrors.ustack.com/uos/dailybuild/uOS-dayilbuild-2013-12-02.iso
 
-    3. 机器角色判断
+安装完成以后得到一个endpoint比如说是http://192.168.10.11
 
-    4. 参数规则判断
+代码环境::
+
+    git clone git@git.ustack.com:ustack/mimic.git
+    virtualenv .venv
+    source .venv/bin/activate
+    python setup.py install
+
+配置环境 /etc/mimic/mimic.conf ::
+
+   foreman_address = http://192.168.10.11:3000
+   foreman_proxy_address = http://192.168.10.11:8443
+
+Mimic_API
+
+Structure
+---------------
+
+UOS installer的后端包括了几个部分：
+
+- 注册
+- 网段分配
+- 网络检测
+- 服务安装
+
+Host Manager的后端包括了几个部分:
+
+- 硬件发现
+- 硬件自动注册
+- 机器角色判断
+- 参数规则判断
 
 .. toctree::
    :maxdepth: 2
