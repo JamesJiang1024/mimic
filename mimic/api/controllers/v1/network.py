@@ -21,7 +21,7 @@ class NetworkController(rest.RestController):
         LOG.info("install stage2 dhcp range is: %s" % content['dhcp_range'])
         self._update_env_key_value("dhcp_range", content['dhcp_range'])
         result['dhcp_range'] = content['dhcp_range']
-        reserve = content['dhcp_range'].split(" ")[1].split(".")[-1]
+        reserve = int(content['dhcp_range'].split(" ")[1].split(".")[-1]) + 1
 
         LOG.info("reserve_bottom is get from dhcp range is: %s" % reserve)
         self._update_env_key_value("reserve_bottom", reserve)

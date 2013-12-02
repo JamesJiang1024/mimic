@@ -19,6 +19,10 @@ Enable Driver and supporting meta-classes
 """
 
 from mimic.engine.driver import base
+import logging
+
+
+LOG = logging.getLogger(__name__)
 
 
 class CIDRDriver(base.BaseSmartParameter):
@@ -27,11 +31,14 @@ class CIDRDriver(base.BaseSmartParameter):
         base.BaseSmartParameter.__init__(self, name, format, classes, role)
 
     def action(self, count, hostname, **kwargs):
+        LOG.info("get into cidrdriver, count: %s, hostname: %s" %
+                 (count, hostname))
         result = []
         strs = self.format.split("/")
         for stra in strs:
             matched_value = self.dbapi.find_lookup_value_by_match("env=%s"
                                                             % stra)[0].value
+            LOG.debug("find match value: %s" % matched_value)
             result.append(matched_value)
 
         lookup_values = {
@@ -39,6 +46,7 @@ class CIDRDriver(base.BaseSmartParameter):
             "value": "%s/%s" % (result[0], result[1]),
             "lookup_key_id": self.key
         }
+        LOG.info("final lookup_values is: %s" % lookup_values)
         self.dbapi.create_lookup_value(lookup_values)
 
 

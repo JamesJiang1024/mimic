@@ -70,7 +70,7 @@ class PuppetController(rest.RestController):
         data = manager.build_host_data(mac, "no", ip, build=False)
 
         LOG.info("create first machine finished begin to configuration")
-        subprocess.Popen("puppet agent -vt >> %s" %
+        subprocess.Popen("puppet agent -vt 2>>&1 %s" %
                          CONF.uos_install_stage2_log,
                          shell=True)
         return data

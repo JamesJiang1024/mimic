@@ -50,21 +50,27 @@ class ListIncrementDriver(base.BaseSmartParameter):
         # get value of lookup_keys and lookup_key_ids
         for host in hosts:
             hn = host['host']['name']
-            lv = self.dbapi.find_lookup_value_by_id_match("fqdn=%s" % hn, self.key)
+            lv = self.dbapi.find_lookup_value_by_id_match(
+                "fqdn=%s" % hn, self.key)
             if len(lv) > 0:
                 selected_lookup.append(lv[0].id)
                 result = lv[0].value
             if self.assistant_key:
-                lv2 = self.dbapi.find_lookup_value_by_id_match("fqdn=%s" % hn, self.assistant_key)
+                lv2 = self.dbapi.find_lookup_value_by_id_match(
+                    "fqdn=%s" % hn, self.assistant_key)
                 if len(lv2) > 0:
                     selected_lookup.append(lv2[0].id)
                     result = lv2[0].value
+        LOG.info("now selected_lookup_values are: %s, result are: %s" %
+                 (selected_lookup, result))
+
         # fromat judgeing
         format_types = {"ipaddr": ip, "hostname": hostname}
         for format_type in format_types:
             if format_type in self.format:
                 form = self.format.replace(format_type,
                         format_types[format_type])
+        LOG.info("using form: %s" % form)
 
         if result == "":
             result += "%s" % form
@@ -73,6 +79,9 @@ class ListIncrementDriver(base.BaseSmartParameter):
 
         # append new ip format to old lookup_values
         for selected_lu in selected_lookup:
+            LOG.info(
+                "update values to selected_lookup_value: %s, result: %s" %
+                (selected_lu, result))
             lookup_values = {
                 "value": str(result),
             }
@@ -89,6 +98,7 @@ class ListIncrementDriver(base.BaseSmartParameter):
             "value": str(result),
             "lookup_key_id": result_key
         }
+        LOG.info("add new lookup_values: %s" % lookup_values)
         self.dbapi.create_lookup_value(lookup_values)
 
 

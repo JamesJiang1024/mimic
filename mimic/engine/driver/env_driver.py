@@ -20,6 +20,9 @@ Enable Driver and supporting meta-classes
 
 from mimic.engine.driver import base
 
+import logging
+LOG = logging.getLogger(__name__)
+
 
 class EnvDriver(base.BaseSmartParameter):
 
@@ -27,7 +30,10 @@ class EnvDriver(base.BaseSmartParameter):
         base.BaseSmartParameter.__init__(self, name, format, classes, role)
 
     def action(self, count, hostname, **kwargs):
+        LOG.info("get into env driver, count: %s, hostname: %s" %
+                 (count, hostname))
         strs = self.format.split(";")
+        LOG.info("split format is:%s" % strs)
         removed = ""
         for stra in strs:
             if "env=" in stra:
@@ -36,17 +42,17 @@ class EnvDriver(base.BaseSmartParameter):
         matched_value = self.dbapi.find_lookup_value_by_match("env=%s"
                                                             % passd)[0].value
         result = self.format
-        print result
-        print removed
-        print matched_value
         result = result.replace(removed, matched_value)
         result = result.replace(";", "")
+        LOG.info("env matched_value is: %s, result: %s" %
+                 (matched_value, result))
 
         lookup_values = {
             "match": "fqdn=%s.ustack.in" % hostname,
             "value": result,
             "lookup_key_id": self.key
         }
+        LOG.info("final lookup_value is: %s" % lookup_values)
         self.dbapi.create_lookup_value(lookup_values)
 
 

@@ -18,7 +18,11 @@
 Enable Driver and supporting meta-classes
 """
 
+import logging
 from mimic.engine.driver import base
+
+
+LOG = logging.getLogger(__name__)
 
 
 class EnableDriver(base.BaseSmartParameter):
@@ -27,11 +31,14 @@ class EnableDriver(base.BaseSmartParameter):
         base.BaseSmartParameter.__init__(self, name, format, classes, role)
 
     def action(self, count, hostname, **kwargs):
+        LOG.info("get into enable driver, count: %s, hostname: %s" %
+                 (count, hostname))
         lookup_values = {
             "match": "fqdn=%s.ustack.in" % hostname,
             "value": self.format,
             "lookup_key_id": self.key
         }
+        LOG.info("final lookup_values is: %s" % lookup_values)
         self.dbapi.create_lookup_value(lookup_values)
 
 

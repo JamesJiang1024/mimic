@@ -58,7 +58,7 @@ def gateway_scan(gateway):
 def get_network_info_from_file():
     config = ConfigParser.ConfigParser()
     network_info = {}
-    with open("/tmp/unitedstack.cfg", "rw") as cfgfile:
+    with open("/etc/ustack/ustack.conf", "rw") as cfgfile:
         config.readfp(cfgfile)
         network_info['subnet'] = config.get("network", "subnet")
         network_info['master'] = config.get("network", "ip")

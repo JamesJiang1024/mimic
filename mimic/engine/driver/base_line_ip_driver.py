@@ -18,7 +18,11 @@
 Enable Driver and supporting meta-classes
 """
 
+import logging
 from mimic.engine.driver import base
+
+
+LOG = logging.getLogger(__name__)
 
 
 class BaseLineIpDriver(base.BaseSmartParameter):
@@ -27,8 +31,11 @@ class BaseLineIpDriver(base.BaseSmartParameter):
         base.BaseSmartParameter.__init__(self, name, format, classes, role)
 
     def action(self, count, hostname, **kwargs):
+        LOG.info("get into baselineip driver, count: %s, hostname: %s" %
+                 (count, hostname))
         base_ips = self.format.split(".")
         last = int(base_ips[-1]) + count
+
         rebuild_api = ""
         c = 0
         for ip in base_ips:
@@ -42,6 +49,7 @@ class BaseLineIpDriver(base.BaseSmartParameter):
             "value": rebuild_api,
             "lookup_key_id": self.key
         }
+        LOG.info("final lookup_values is: %s" % lookup_values)
         self.dbapi.create_lookup_value(lookup_values)
 
 
