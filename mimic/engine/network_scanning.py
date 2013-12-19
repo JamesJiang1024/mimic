@@ -60,10 +60,10 @@ def get_network_info_from_file():
     network_info = {}
     with open("/etc/ustack/ustack.conf", "rw") as cfgfile:
         config.readfp(cfgfile)
-        network_info['subnet'] = config.get("network", "subnet")
-        network_info['master'] = config.get("network", "ip")
-        network_info['gateway'] = config.get("network", "gateway")
-        network_info['netmask'] = config.get("network", "netmask")
+        network_info['subnet'] = config.get("NETWORK", "subnet")
+        network_info['master'] = config.get("NETWORK", "ip")
+        network_info['gateway'] = config.get("NETWORK", "gateway")
+        network_info['netmask'] = config.get("NETWORK", "netmask")
     return network_info
 
 if __name__ == "__main__":
