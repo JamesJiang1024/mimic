@@ -1,0 +1,4 @@
+mimic
+=====
+
+Hardware discovery
